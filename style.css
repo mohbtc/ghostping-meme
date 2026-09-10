@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #05020a;
+  color: #ffffff;
+  font-family: 'Space Mono', monospace;
+  overflow: hidden;
+}
+
+.entry-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, rgba(126, 45, 255, 0.16), transparent 45%),
+    #05020a;
+}
+
+.entry-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      #ffffff 4px
+    );
+}
+
+.ghost {
+  font-size: 76px;
+  margin-bottom: 22px;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 22px rgba(170, 80, 255, 0.8));
+}
+
+.system-label {
+  font-size: 14px;
+  letter-spacing: 5px;
+  color: #b77cff;
+  margin-bottom: 24px;
+}
+
+.terminal {
+  width: min(420px, 100%);
+  padding: 18px;
+  border: 1px solid rgba(183, 124, 255, 0.25);
+  background: rgba(255, 255, 255, 0.025);
+  font-size: 12px;
+  line-height: 1.9;
+  color: #85808f;
+  margin-bottom: 18px;
+}
+
+.terminal span {
+  color: #b77cff;
+}
+
+.message-box {
+  width: min(420px, 100%);
+  padding: 22px;
+  border-left: 2px solid #b77cff;
+  background: rgba(183, 124, 255, 0.06);
+  margin-bottom: 24px;
+}
+
+.sender {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #77717f;
+  margin-bottom: 10px;
+}
+
+.message {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+button {
+  border: 1px solid #b77cff;
+  background: transparent;
+  color: #ffffff;
+  padding: 15px 24px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+button:hover {
+  background: #b77cff;
+  color: #05020a;
+  box-shadow: 0 0 30px rgba(183, 124, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@media (max-width: 500px) {
+  .ghost {
+    font-size: 64px;
+  }
+
+  .system-label {
+    font-size: 12px;
+    letter-spacing: 4px;
+  }
+
+  .message {
+    font-size: 18px;
+  }
+}
