@@ -1,1270 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Ghostping 👻</title>
+  <title>Ghostping 👻</title>
 
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: #050308;
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-  overflow-x: hidden;
-}
-
-button {
-  font: inherit;
-}
-
-.screen {
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
-
-/* =========================
-   BACKGROUND
-========================= */
-
-.screen::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size: 35px 35px;
-  pointer-events: none;
-}
-
-.screen::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 3px,
-    rgba(255,255,255,.018) 4px
-  );
-}
-
-/* =========================
-   ENTRY SCREEN
-========================= */
-
-.entry-screen {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 25px 20px;
-  position: relative;
-  z-index: 2;
-}
-
-.top-hud {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #777;
-  text-transform: uppercase;
-}
-
-.top-hud span:last-child {
-  color: #b8ff65;
-}
-
-/* =========================
-   GHOST + REAL FLAME
-========================= */
-
-.ghost-stage {
-  position: relative;
-  width: 210px;
-  height: 230px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-/* ONE structured flame behind the ghost */
-
-.ghost-flame {
-  position: absolute;
-  width: 115px;
-  height: 175px;
-  bottom: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  filter: drop-shadow(0 0 22px rgba(150, 55, 255, .75));
-}
-
-/* outer flame */
-.ghost-flame::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  background: #8d35ff;
-  clip-path: polygon(
-    50% 100%,
-    20% 83%,
-    8% 60%,
-    20% 68%,
-    17% 38%,
-    35% 52%,
-    34% 19%,
-    49% 42%,
-    61% 5%,
-    68% 39%,
-    86% 22%,
-    80% 51%,
-    96% 43%,
-    88% 72%,
-    75% 87%
-  );
-}
-
-/* inner flame */
-.ghost-flame::after {
-  content: "";
-  position: absolute;
-  width: 48px;
-  height: 90px;
-  left: 34px;
-  bottom: 12px;
-  background: #dca7ff;
-  clip-path: polygon(
-    50% 100%,
-    20% 76%,
-    27% 49%,
-    42% 62%,
-    43% 25%,
-    59% 48%,
-    68% 0%,
-    73% 48%,
-    88% 38%,
-    78% 74%
-  );
-  filter: drop-shadow(0 0 8px rgba(220,167,255,.8));
-}
-
-/* actual ghost emoji */
-.ghost {
-  position: relative;
-  z-index: 3;
-  font-size: 125px;
-  line-height: 1;
-  filter:
-    drop-shadow(0 0 8px rgba(255,255,255,.7))
-    drop-shadow(0 0 24px rgba(143, 55, 255, .7));
-  animation: ghostFloat 3s ease-in-out infinite;
-  user-select: none;
-  cursor: pointer;
-}
-
-@keyframes ghostFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(-1deg);
-  }
-
-  50% {
-    transform: translateY(-10px) rotate(1deg);
-  }
-}
-
-.ghost:hover {
-  animation: ghostGlitch .35s infinite;
-}
-
-@keyframes ghostGlitch {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  25% {
-    transform: translate(-4px, 2px) rotate(-3deg);
-  }
-
-  50% {
-    transform: translate(4px, -2px) rotate(3deg);
-  }
-
-  75% {
-    transform: translate(-2px, -3px);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-/* =========================
-   MAIN TEXT
-========================= */
-
-.system-label {
-  color: #a35cff;
-  font-size: 11px;
-  letter-spacing: 5px;
-  margin-top: 10px;
-  margin-bottom: 12px;
-}
-
-.main-title {
-  font-size: clamp(58px, 17vw, 125px);
-  font-weight: 900;
-  line-height: .82;
-  letter-spacing: -6px;
-  text-align: center;
-  text-transform: uppercase;
-  text-shadow:
-    3px 0 #8d35ff,
-    -2px 0 rgba(255,255,255,.15);
-}
-
-.subtitle {
-  color: #777;
-  margin-top: 18px;
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-align: center;
-}
-
-/* =========================
-   TERMINAL
-========================= */
-
-.terminal {
-  width: min(430px, 100%);
-  margin-top: 28px;
-  padding: 17px;
-  border: 1px solid #29202f;
-  background: rgba(12, 7, 17, .8);
-  font-family: monospace;
-  font-size: 11px;
-  line-height: 1.8;
-  color: #777;
-}
-
-.terminal .green {
-  color: #b8ff65;
-}
-
-.terminal .purple {
-  color: #b66cff;
-}
-
-.terminal .red {
-  color: #ff526d;
-}
-
-/* =========================
-   MESSAGE
-========================= */
-
-.message-box {
-  width: min(430px, 100%);
-  margin-top: 12px;
-  padding: 18px;
-  border: 1px solid #382344;
-  background: #0d0812;
-}
-
-.sender {
-  color: #8d35ff;
-  font-size: 9px;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-}
-
-.message {
-  font-family: monospace;
-  font-size: 15px;
-}
-
-.button-row {
-  display: flex;
-  gap: 10px;
-  width: min(430px, 100%);
-  margin-top: 15px;
-}
-
-.action-btn {
-  flex: 1;
-  padding: 15px 10px;
-  background: #8d35ff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  transition: .2s;
-}
-
-.action-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 25px rgba(141,53,255,.5);
-}
-
-.action-btn.secondary {
-  background: transparent;
-  border: 1px solid #302438;
-  color: #777;
-}
-
-.bottom-hud {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: space-between;
-  color: #4d4652;
-  font-size: 9px;
-  letter-spacing: 2px;
-}
-
-/* =========================
-   MESSAGE SCREEN
-========================= */
-
-.message-screen {
-  min-height: 100vh;
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 30px 20px;
-  position: relative;
-  z-index: 3;
-}
-
-.message-screen.active {
-  display: flex;
-}
-
-.transmission {
-  width: min(600px, 100%);
-}
-
-.transmission-label {
-  color: #8d35ff;
-  font-family: monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  margin-bottom: 25px;
-}
-
-.chat-line {
-  border-left: 2px solid #8d35ff;
-  padding: 15px 20px;
-  margin-bottom: 12px;
-  background: rgba(255,255,255,.025);
-  font-family: monospace;
-}
-
-.typing {
-  color: #777;
-  font-size: 12px;
-}
-
-.ghosted {
-  color: #ff526d;
-  font-size: clamp(40px, 12vw, 80px);
-  font-weight: 900;
-  margin-top: 30px;
-}
-
-.enter-zone {
-  margin-top: 35px;
-}
-
-/* =========================
-   GHOST ZONE
-========================= */
-
-.zone-screen {
-  min-height: 100vh;
-  display: none;
-  padding: 80px 20px;
-  position: relative;
-  z-index: 3;
-}
-
-.zone-screen.active {
-  display: block;
-}
-
-.zone-wrap {
-  max-width: 950px;
-  margin: auto;
-}
-
-.zone-header {
-  margin-bottom: 50px;
-}
-
-.zone-small {
-  color: #8d35ff;
-  font-family: monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-}
-
-.zone-title {
-  font-size: clamp(55px, 13vw, 120px);
-  font-weight: 900;
-  letter-spacing: -5px;
-  line-height: .85;
-  margin-top: 15px;
-}
-
-.zone-meta {
-  margin-top: 20px;
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  font-family: monospace;
-  font-size: 10px;
-  color: #666;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-}
-
-.zone-card {
-  min-height: 190px;
-  padding: 25px;
-  border: 1px solid #2c2034;
-  background: #0b070f;
-  cursor: pointer;
-  transition: .25s;
-  position: relative;
-  overflow: hidden;
-}
-
-.zone-card:hover {
-  border-color: #8d35ff;
-  transform: translateY(-5px);
-}
-
-.zone-card h3 {
-  font-size: 20px;
-  margin-bottom: 15px;
-}
-
-.zone-card p {
-  color: #777;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.card-number {
-  color: #8d35ff;
-  font-family: monospace;
-  font-size: 10px;
-  margin-bottom: 30px;
-}
-
-/* =========================
-   VOID
-========================= */
-
-.void-screen {
-  min-height: 100vh;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  z-index: 4;
-  padding: 20px;
-}
-
-.void-screen.active {
-  display: flex;
-}
-
-.void-text {
-  font-size: clamp(40px, 12vw, 100px);
-  font-weight: 900;
-  letter-spacing: -5px;
-  line-height: .85;
-}
-
-.cursor {
-  display: inline-block;
-  width: 10px;
-  height: 1em;
-  background: #8d35ff;
-  vertical-align: bottom;
-  animation: blink .8s infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-/* =========================
-   MODAL
-========================= */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.82);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 20;
-}
-
-.modal.active {
-  display: flex;
-}
-
-.modal-box {
-  width: min(500px, 100%);
-  border: 1px solid #8d35ff;
-  background: #09050d;
-  padding: 30px;
-  box-shadow: 0 0 50px rgba(141,53,255,.2);
-}
-
-.modal-label {
-  color: #8d35ff;
-  font-family: monospace;
-  font-size: 10px;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-}
-
-.modal-box h2 {
-  font-size: 35px;
-  margin-bottom: 15px;
-}
-
-.modal-box p {
-  color: #999;
-  line-height: 1.7;
-  font-size: 13px;
-}
-
-.close-modal {
-  margin-top: 25px;
-  background: transparent;
-  border: 1px solid #3b2b44;
-  color: #aaa;
-  padding: 12px 20px;
-  cursor: pointer;
-}
-
-/* =========================
-   NOTIFICATIONS
-========================= */
-
-.notification {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  width: min(310px, calc(100% - 36px));
-  padding: 15px;
-  border: 1px solid #40264f;
-  background: #0c0710;
-  font-family: monospace;
-  font-size: 11px;
-  z-index: 30;
-  transform: translateY(150px);
-  transition: .4s;
-}
-
-.notification.show {
-  transform: translateY(0);
-}
-
-.notification strong {
-  color: #8d35ff;
-  display: block;
-  margin-bottom: 6px;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 650px) {
-
-  .ghost-stage {
-    width: 180px;
-    height: 200px;
-  }
-
-  .ghost {
-    font-size: 105px;
-  }
-
-  .ghost-flame {
-    width: 100px;
-    height: 150px;
-  }
-
-  .main-title {
-    letter-spacing: -4px;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .zone-card {
-    min-height: 160px;
-  }
-
-  .top-hud,
-  .bottom-hud {
-    font-size: 8px;
-  }
-
-  .bottom-hud {
-    gap: 10px;
-  }
-
-  .button-row {
-    flex-direction: column;
-  }
-}
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- =========================
-     ENTRY
-========================= -->
+  <!-- =========================
+       ENTRY SCREEN
+  ========================== -->
 
-<main id="entry" class="screen entry-screen">
+  <main id="entry" class="screen entry-screen">
 
-  <div class="top-hud">
-    <span>GHOSTPING NETWORK</span>
-    <span>NODE_404</span>
-    <span>ONLINE</span>
-  </div>
+    <div class="top-hud">
+      <span>GHOSTPING NETWORK</span>
+      <span>NODE_404</span>
+      <span class="online">ONLINE</span>
+    </div>
 
-  <div class="ghost-stage">
+    <div class="ghost-stage">
 
-    <!-- structured flame behind ghost -->
-    <div class="ghost-flame"></div>
+      <div class="ghost-flame"></div>
 
-    <!-- actual ghost emoji -->
-    <div class="ghost" id="ghost">👻</div>
+      <div class="ghost" id="ghost">👻</div>
 
-  </div>
+    </div>
 
-  <p class="system-label">GHOSTPING.EXE</p>
+    <p class="system-label">GHOSTPING.EXE</p>
 
-  <h1 class="main-title">YOU UP?</h1>
+    <h1 class="main-title">YOU UP?</h1>
 
-  <p class="subtitle">
-    something found its way into your device.
-  </p>
-
-  <div class="terminal">
-    <div>CONNECTION: <span class="green">ESTABLISHED</span></div>
-    <div>SIGNAL: <span class="purple">UNSTABLE</span></div>
-    <div>REPLY SERVER: <span class="red">DEAD</span></div>
-    <div>UNKNOWN USER: <span class="purple">DETECTED</span></div>
-  </div>
-
-  <div class="message-box">
-    <p class="sender">UNKNOWN SENDER</p>
-    <p class="message">hey, you there?</p>
-  </div>
-
-  <div class="button-row">
-    <button class="action-btn" id="openMessage">
-      OPEN MESSAGE
-    </button>
-
-    <button class="action-btn secondary" id="ignoreMessage">
-      IGNORE
-    </button>
-  </div>
-
-  <div class="bottom-hud">
-    <span>DON'T BLINK</span>
-    <span>GHOSTPING // v0.0.404</span>
-  </div>
-
-</main>
-
-
-<!-- =========================
-     MESSAGE
-========================= -->
-
-<section id="messageScreen" class="screen message-screen">
-
-  <div class="transmission">
-
-    <p class="transmission-label">
-      INCOMING TRANSMISSION // UNKNOWN
+    <p class="subtitle">
+      something found its way into your device.
     </p>
 
-    <div id="chat"></div>
+    <div class="terminal">
 
-    <div id="ghosted" class="ghosted"></div>
+      <div>
+        CONNECTION:
+        <span class="green">ESTABLISHED</span>
+      </div>
 
-    <button
-      id="enterZone"
-      class="action-btn enter-zone"
-      style="display:none;">
-      ENTER THE GHOST ZONE →
-    </button>
+      <div>
+        SIGNAL:
+        <span class="purple">UNSTABLE</span>
+      </div>
 
-  </div>
+      <div>
+        REPLY SERVER:
+        <span class="red">DEAD</span>
+      </div>
 
-</section>
+      <div>
+        UNKNOWN USER:
+        <span class="purple">DETECTED</span>
+      </div>
 
+    </div>
 
-<!-- =========================
-     GHOST ZONE
-========================= -->
+    <div class="message-box">
 
-<section id="zoneScreen" class="screen zone-screen">
+      <p class="sender">UNKNOWN SENDER</p>
 
-  <div class="zone-wrap">
-
-    <div class="zone-header">
-
-      <p class="zone-small">
-        LOCATION FOUND // CONNECTION UNSTABLE
+      <p class="message">
+        hey, you there?
       </p>
 
-      <h2 class="zone-title">
-        THE<br>GHOST ZONE
+    </div>
+
+    <div class="button-row">
+
+      <button id="openMessage" class="action-btn">
+        OPEN MESSAGE
+      </button>
+
+      <button id="ignoreMessage" class="action-btn secondary">
+        IGNORE
+      </button>
+
+    </div>
+
+    <div class="bottom-hud">
+      <span>DON'T BLINK</span>
+      <span>GHOSTPING // v0.0.404</span>
+    </div>
+
+  </main>
+
+
+  <!-- =========================
+       MESSAGE SCREEN
+  ========================== -->
+
+  <section id="messageScreen" class="screen message-screen">
+
+    <div class="transmission">
+
+      <p class="transmission-label">
+        INCOMING TRANSMISSION // UNKNOWN
+      </p>
+
+      <div id="chat"></div>
+
+      <div id="ghosted" class="ghosted"></div>
+
+      <button
+        id="enterZone"
+        class="action-btn enter-zone">
+        ENTER THE GHOST ZONE →
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       GHOST ZONE
+  ========================== -->
+
+  <section id="zoneScreen" class="screen zone-screen">
+
+    <div class="zone-wrap">
+
+      <div class="zone-header">
+
+        <p class="zone-small">
+          LOCATION FOUND // CONNECTION UNSTABLE
+        </p>
+
+        <h2 class="zone-title">
+          THE<br>
+          GHOST ZONE
+        </h2>
+
+        <div class="zone-meta">
+
+          <span>X: 00.404</span>
+          <span>Y: ???</span>
+          <span>STATUS: UNSTABLE</span>
+
+        </div>
+
+      </div>
+
+
+      <div class="cards">
+
+        <div id="statusCard" class="zone-card">
+
+          <div class="card-number">
+            01 // SCAN
+          </div>
+
+          <h3>
+            CHECK YOUR STATUS
+          </h3>
+
+          <p>
+            Find out how badly the internet has already affected you.
+          </p>
+
+        </div>
+
+
+        <div id="talkCard" class="zone-card">
+
+          <div class="card-number">
+            02 // TRANSMIT
+          </div>
+
+          <h3>
+            TALK TO GHOSTPING
+          </h3>
+
+          <p>
+            Send a message. Maybe it will reply. Probably not.
+          </p>
+
+        </div>
+
+
+        <div id="loreCard" class="zone-card">
+
+          <div class="card-number">
+            03 // CLASSIFIED
+          </div>
+
+          <h3>
+            CLASSIFIED FILE
+          </h3>
+
+          <p>
+            There are things about Ghostping you probably shouldn't know.
+          </p>
+
+        </div>
+
+
+        <div id="voidCard" class="zone-card">
+
+          <div class="card-number">
+            04 // WARNING
+          </div>
+
+          <h3>
+            ENTER THE VOID
+          </h3>
+
+          <p>
+            No signal. No message. No explanation.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       VOID / LAST PAGE
+  ========================== -->
+
+  <section id="voidScreen" class="screen void-screen">
+
+    <div class="void-content">
+
+      <div class="void-text">
+
+        YOU<br>
+        FOUND<br>
+        NOTHING<span class="cursor"></span>
+
+      </div>
+
+      <button id="backFromVoid" class="action-btn back-button">
+        ← GO BACK
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       MODAL
+  ========================== -->
+
+  <div id="modal" class="modal">
+
+    <div class="modal-box">
+
+      <div class="modal-label">
+        GHOSTPING // CLASSIFIED
+      </div>
+
+      <h2 id="modalTitle">
+        SYSTEM
       </h2>
 
-      <div class="zone-meta">
-        <span>X: 00.404</span>
-        <span>Y: ???</span>
-        <span>STATUS: UNSTABLE</span>
-      </div>
+      <p id="modalText"></p>
 
-    </div>
-
-    <div class="cards">
-
-      <div class="zone-card" id="statusCard">
-        <div class="card-number">01 // SCAN</div>
-        <h3>CHECK YOUR STATUS</h3>
-        <p>
-          Find out how badly the internet has already affected you.
-        </p>
-      </div>
-
-      <div class="zone-card" id="talkCard">
-        <div class="card-number">02 // TRANSMIT</div>
-        <h3>TALK TO GHOSTPING</h3>
-        <p>
-          Send a message. Maybe it will reply. Probably not.
-        </p>
-      </div>
-
-      <div class="zone-card" id="loreCard">
-        <div class="card-number">03 // CLASSIFIED</div>
-        <h3>CLASSIFIED FILE</h3>
-        <p>
-          There are things about Ghostping you probably shouldn't know.
-        </p>
-      </div>
-
-      <div class="zone-card" id="voidCard">
-        <div class="card-number">04 // WARNING</div>
-        <h3>ENTER THE VOID</h3>
-        <p>
-          No signal. No message. No explanation.
-        </p>
-      </div>
+      <button id="closeModal" class="close-modal">
+        CLOSE FILE
+      </button>
 
     </div>
 
   </div>
 
-</section>
 
+  <!-- =========================
+       NOTIFICATION
+  ========================== -->
 
-<!-- =========================
-     VOID
-========================= -->
+  <div id="notification" class="notification">
 
-<section id="voidScreen" class="screen void-screen">
+    <strong>
+      GHOSTPING SYSTEM
+    </strong>
 
-  <div>
-    <div class="void-text">
-      YOU<br>
-      FOUND<br>
-      NOTHING<span class="cursor"></span>
-    </div>
-
-    <button
-      id="backFromVoid"
-      class="action-btn"
-      style="margin-top:35px;">
-      GO BACK
-    </button>
-  </div>
-
-</section>
-
-
-<!-- =========================
-     MODAL
-========================= -->
-
-<div id="modal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-label">
-      GHOSTPING // CLASSIFIED
-    </div>
-
-    <h2 id="modalTitle">SYSTEM</h2>
-
-    <p id="modalText"></p>
-
-    <button id="closeModal" class="close-modal">
-      CLOSE FILE
-    </button>
+    <span id="notificationText"></span>
 
   </div>
 
-</div>
 
-
-<!-- =========================
-     NOTIFICATION
-========================= -->
-
-<div id="notification" class="notification">
-  <strong>GHOSTPING SYSTEM</strong>
-  <span id="notificationText"></span>
-</div>
-
-
-<script>
-
-/* =========================
-   ELEMENTS
-========================= */
-
-const entry = document.getElementById("entry");
-const messageScreen = document.getElementById("messageScreen");
-const zoneScreen = document.getElementById("zoneScreen");
-const voidScreen = document.getElementById("voidScreen");
-
-const openMessage = document.getElementById("openMessage");
-const ignoreMessage = document.getElementById("ignoreMessage");
-
-const chat = document.getElementById("chat");
-const ghosted = document.getElementById("ghosted");
-const enterZone = document.getElementById("enterZone");
-
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modalTitle");
-const modalText = document.getElementById("modalText");
-const closeModal = document.getElementById("closeModal");
-
-const notification = document.getElementById("notification");
-const notificationText = document.getElementById("notificationText");
-
-const ghost = document.getElementById("ghost");
-
-
-/* =========================
-   SCREEN SWITCHING
-========================= */
-
-function showOnly(screen) {
-
-  entry.style.display = "none";
-  messageScreen.classList.remove("active");
-  zoneScreen.classList.remove("active");
-  voidScreen.classList.remove("active");
-
-  if (screen === entry) {
-    entry.style.display = "flex";
-  }
-
-  if (screen === messageScreen) {
-    messageScreen.classList.add("active");
-  }
-
-  if (screen === zoneScreen) {
-    zoneScreen.classList.add("active");
-  }
-
-  if (screen === voidScreen) {
-    voidScreen.classList.add("active");
-  }
-
-  window.scrollTo(0, 0);
-}
-
-
-/* =========================
-   NOTIFICATION
-========================= */
-
-function notify(text) {
-
-  notificationText.textContent = text;
-
-  notification.classList.add("show");
-
-  setTimeout(() => {
-    notification.classList.remove("show");
-  }, 3500);
-}
-
-
-/* =========================
-   IGNORE BUTTON
-========================= */
-
-ignoreMessage.addEventListener("click", () => {
-
-  notify("you really thought ignoring it would work.");
-
-  setTimeout(() => {
-    notify("Ghostping saw that.");
-  }, 4000);
-
-});
-
-
-/* =========================
-   OPEN MESSAGE
-========================= */
-
-openMessage.addEventListener("click", () => {
-
-  showOnly(messageScreen);
-
-  chat.innerHTML = "";
-  ghosted.textContent = "";
-  enterZone.style.display = "none";
-
-  const messages = [
-
-    {
-      text: "hey, you there?",
-      delay: 500
-    },
-
-    {
-      text: "SEEN",
-      delay: 1800
-    },
-
-    {
-      text: "Ghostping is typing...",
-      delay: 2800
-    },
-
-    {
-      text: "typing.",
-      delay: 3500
-    },
-
-    {
-      text: "typing..",
-      delay: 3900
-    },
-
-    {
-      text: "typing...",
-      delay: 4300
-    },
-
-    {
-      text: "Ghostping stopped typing.",
-      delay: 5100
-    },
-
-    {
-      text: "Ghostping is typing...",
-      delay: 6200
-    }
-
-  ];
-
-  messages.forEach((item) => {
-
-    setTimeout(() => {
-
-      const div = document.createElement("div");
-
-      div.className = "chat-line";
-
-      div.textContent = item.text;
-
-      chat.appendChild(div);
-
-    }, item.delay);
-
-  });
-
-
-  setTimeout(() => {
-
-    ghosted.textContent = "GHOSTED.";
-
-  }, 7600);
-
-
-  setTimeout(() => {
-
-    enterZone.style.display = "block";
-
-  }, 8500);
-
-});
-
-
-/* =========================
-   ENTER GHOST ZONE
-========================= */
-
-enterZone.addEventListener("click", () => {
-
-  showOnly(zoneScreen);
-
-});
-
-
-/* =========================
-   MODAL
-========================= */
-
-function openModal(title, text) {
-
-  modalTitle.textContent = title;
-  modalText.textContent = text;
-
-  modal.classList.add("active");
-
-}
-
-closeModal.addEventListener("click", () => {
-
-  modal.classList.remove("active");
-
-});
-
-
-modal.addEventListener("click", (e) => {
-
-  if (e.target === modal) {
-    modal.classList.remove("active");
-  }
-
-});
-
-
-/* =========================
-   STATUS
-========================= */
-
-document.getElementById("statusCard").addEventListener("click", () => {
-
-  openModal(
-    "YOUR STATUS",
-    "Signal detected. Attention span: 3%. Ghost tolerance: 87%. Chance of receiving a reply: statistically embarrassing."
-  );
-
-});
-
-
-/* =========================
-   TALK TO GHOSTPING
-========================= */
-
-document.getElementById("talkCard").addEventListener("click", () => {
-
-  openModal(
-    "TRANSMISSION",
-    "You: hello?\n\nGhostping: typing...\n\nGhostping: typing...\n\nGhostping: stopped typing.\n\nYou have been ghosted."
-  );
-
-});
-
-
-/* =========================
-   CLASSIFIED FILE
-========================= */
-
-document.getElementById("loreCard").addEventListener("click", () => {
-
-  openModal(
-    "FILE 00.404",
-    "Ghostping was never built to reply. It was built to appear, disappear, and leave you questioning whether the message ever existed."
-  );
-
-});
-
-
-/* =========================
-   VOID
-========================= */
-
-document.getElementById("voidCard").addEventListener("click", () => {
-
-  showOnly(voidScreen);
-
-});
-
-
-document.getElementById("backFromVoid").addEventListener("click", () => {
-
-  showOnly(zoneScreen);
-
-});
-
-
-/* =========================
-   GHOST SECRET
-========================= */
-
-let ghostClicks = 0;
-
-ghost.addEventListener("click", () => {
-
-  ghostClicks++;
-
-  if (ghostClicks === 1) {
-    notify("don't touch that.");
-  }
-
-  if (ghostClicks === 3) {
-    notify("seriously?");
-  }
-
-  if (ghostClicks === 5) {
-    notify("the ghost is getting annoyed.");
-  }
-
-  if (ghostClicks === 7) {
-
-    openModal(
-      "YOU FOUND IT",
-      "You clicked the ghost seven times. There is absolutely nothing here. Unless there is."
-    );
-
-    ghostClicks = 0;
-
-  }
-
-});
-
-
-/* =========================
-   RANDOM SYSTEM MESSAGES
-========================= */
-
-const randomMessages = [
-
-  "someone is watching this page.",
-
-  "reply server still dead.",
-
-  "ghost detected nearby.",
-
-  "you've been here for too long.",
-
-  "connection is pretending to be stable.",
-
-  "Ghostping knows you're still here.",
-
-  "message delivery failed successfully."
-
-];
-
-
-setInterval(() => {
-
-  const random =
-    randomMessages[
-      Math.floor(Math.random() * randomMessages.length)
-    ];
-
-  notify(random);
-
-}, 9000);
-
-
-/* =========================
-   REFRESH JOKE
-========================= */
-
-window.addEventListener("beforeunload", () => {
-
-  console.log(
-    "%cWHY ARE YOU REFRESHING?",
-    "font-size:20px;color:#8d35ff;font-weight:bold;"
-  );
-
-});
-
-
-/* =========================
-   DEVTOOLS JOKE
-========================= */
-
-console.log(
-  "%c👻 GHOSTPING NETWORK",
-  "font-size:24px;font-weight:bold;color:#8d35ff;"
-);
-
-console.log(
-  "%cYou weren't supposed to look in here.",
-  "font-size:13px;color:#aaa;"
-);
-
-</script>
+  <script src="script.js"></script>
 
 </body>
 </html>
