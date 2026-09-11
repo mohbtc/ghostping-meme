@@ -4,36 +4,328 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Ghostping 👻</title>
+  <title>GHOSTPING 👻</title>
+
+  <meta name="theme-color" content="#08030d">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <main id="app">
+  <!-- =========================
+       INTRO
+  ========================== -->
 
-    <section class="entry-screen">
+  <main class="intro" id="intro">
 
-      <div class="ghost">👻</div>
+    <div class="noise"></div>
 
-      <p class="system-label">GHOSTPING.EXE</p>
+    <header class="topbar">
+      <span>GHOSTPING.EXE</span>
+      <span class="status">
+        <i></i> SOMEHOW ONLINE
+      </span>
+    </header>
 
-      <div class="terminal">
-        <p>INITIALIZING...</p>
-        <p>CONNECTION: <span>ESTABLISHED</span></p>
+    <div class="intro-content">
+
+      <div class="ghost-wrap" id="ghost">
+        <div class="fire fire-back"></div>
+        <div class="fire fire-front"></div>
+        <div class="ghost-face">👻</div>
       </div>
 
-      <div class="message-box">
-        <p class="sender">UNKNOWN SENDER</p>
-        <p class="message">hey, you there?</p>
+      <div class="tiny-label">
+        UNKNOWN TRANSMISSION // 00.404
       </div>
 
-      <button id="openMessage">OPEN MESSAGE</button>
+      <h1>
+        YOU<br>
+        <span>UP?</span>
+      </h1>
 
-    </section>
+      <p class="intro-copy">
+        something just entered your device.
+      </p>
+
+      <div class="phone">
+
+        <div class="phone-top">
+          <span>UNKNOWN</span>
+          <span>NOW</span>
+        </div>
+
+        <div class="message">
+          <span class="message-dot"></span>
+          hey, you there?
+        </div>
+
+        <div class="phone-status">
+          delivered ✓
+        </div>
+
+      </div>
+
+      <div class="choice-buttons">
+
+        <button id="openBtn" class="main-btn">
+          OPEN IT
+        </button>
+
+        <button id="ignoreBtn" class="ghost-btn">
+          ignore
+        </button>
+
+      </div>
+
+      <p class="warning">
+        ⚠ don't blame us after this
+      </p>
+
+    </div>
+
+    <div class="corner corner-left">NO SIGNAL</div>
+    <div class="corner corner-right">DON'T BLINK</div>
 
   </main>
+
+
+  <!-- =========================
+       MESSAGE EXPERIENCE
+  ========================== -->
+
+  <section class="message-section hidden" id="messageSection">
+
+    <div class="message-inner">
+
+      <p class="eyebrow">
+        INCOMING MESSAGE
+      </p>
+
+      <div class="giant-message" id="giantMessage">
+        Seen.
+      </div>
+
+      <div class="typing-area" id="typingArea">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <p class="typing-text" id="typingText">
+        Ghostping is typing...
+      </p>
+
+      <div class="broken-line"></div>
+
+      <div class="final-message" id="finalMessage">
+        <!-- JS fills this -->
+      </div>
+
+      <button id="zoneBtn" class="zone-btn hidden">
+        ENTER THE GHOST ZONE →
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       GHOST ZONE
+  ========================== -->
+
+  <section class="zone hidden" id="zone">
+
+    <div class="zone-noise"></div>
+
+    <header class="zone-top">
+      <div>
+        <span class="purple">GHOSTPING</span>
+        <span> // INTERNAL</span>
+      </div>
+
+      <button id="leaveZone">
+        EXIT
+      </button>
+    </header>
+
+    <div class="zone-content">
+
+      <p class="zone-eyebrow">
+        YOU SHOULDN'T BE HERE
+      </p>
+
+      <h2>
+        WELCOME TO<br>
+        <span>THE GHOST ZONE.</span>
+      </h2>
+
+      <p class="zone-description">
+        There is no roadmap here.<br>
+        There is no explanation either.
+      </p>
+
+      <div class="zone-line"></div>
+
+      <div class="chaos-grid">
+
+        <button class="chaos-card" id="statusCard">
+
+          <small>01</small>
+
+          <strong>
+            CHECK<br>
+            YOUR STATUS
+          </strong>
+
+          <span>
+            scan yourself
+          </span>
+
+        </button>
+
+
+        <button class="chaos-card" id="talkCard">
+
+          <small>02</small>
+
+          <strong>
+            TALK TO<br>
+            GHOSTPING
+          </strong>
+
+          <span>
+            probably a bad idea
+          </span>
+
+        </button>
+
+
+        <button class="chaos-card" id="loreCard">
+
+          <small>03</small>
+
+          <strong>
+            OPEN THE<br>
+            CLASSIFIED FILE
+          </strong>
+
+          <span>
+            do not read this
+          </span>
+
+        </button>
+
+
+        <button class="chaos-card dangerous" id="voidCard">
+
+          <small>404</small>
+
+          <strong>
+            ENTER<br>
+            THE VOID
+          </strong>
+
+          <span>
+            why would you
+          </span>
+
+        </button>
+
+      </div>
+
+      <div class="zone-footer">
+        <span>GHOSTPING IS WATCHING</span>
+        <span>CONNECTION: questionable</span>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       VOID
+  ========================== -->
+
+  <section class="void hidden" id="void">
+
+    <div class="void-content">
+
+      <div class="void-small">
+        CONNECTION LOST
+      </div>
+
+      <h2>
+        THERE IS<br>
+        <span>NOTHING</span>
+        HERE.
+      </h2>
+
+      <p id="voidText">
+        you were warned.
+      </p>
+
+      <div class="void-cursor"></div>
+
+      <button id="backBtn">
+        ← okay, i'm leaving
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       MODAL
+  ========================== -->
+
+  <div class="modal hidden" id="modal">
+
+    <div class="modal-box">
+
+      <button class="modal-close" id="modalClose">
+        ×
+      </button>
+
+      <p class="modal-label">
+        GHOSTPING // CLASSIFIED
+      </p>
+
+      <h3 id="modalTitle">
+        SYSTEM
+      </h3>
+
+      <div class="modal-body" id="modalBody"></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       NOTIFICATION
+  ========================== -->
+
+  <div class="toast" id="toast">
+
+    <div class="toast-top">
+      GHOSTPING SYSTEM
+    </div>
+
+    <div id="toastText">
+      hello.
+    </div>
+
+  </div>
+
 
   <script src="script.js"></script>
 
