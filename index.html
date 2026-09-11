@@ -3,1252 +3,1268 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GHOSTPING 👻</title>
-<meta name="theme-color" content="#050308">
+
+<title>Ghostping 👻</title>
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-:root{
---bg:#050308;
---panel:#0b0710;
---panel2:#110b17;
---purple:#9d4edd;
---bright:#d28aff;
---deep:#5a189a;
---white:#f7f0ff;
---muted:#817688;
---green:#8dff69;
---red:#ff4568;
---line:rgba(210,138,255,.17);
-}
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-html{
-scroll-behavior:smooth;
-}
-body{
-min-height:100vh;
-background:var(--bg);
-color:var(--white);
-font-family:"Space Grotesk",sans-serif;
-overflow-x:hidden;
-}
-button,input{
-font:inherit;
-}
-button{
-cursor:pointer;
-}
-button:focus-visible{
-outline:1px solid var(--bright);
-outline-offset:4px;
-}
-.hidden{
-display:none!important;
-}
-body:before{
-content:"";
-position:fixed;
-width:700px;
-height:700px;
-left:50%;
-top:45%;
-transform:translate(-50%,-50%);
-border-radius:50%;
-background:rgba(110,20,170,.12);
-filter:blur(120px);
-pointer-events:none;
-z-index:-3;
-}
-.noise{
-position:fixed;
-inset:0;
-pointer-events:none;
-z-index:999;
-opacity:.045;
-background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-.scanlines{
-position:fixed;
-inset:0;
-pointer-events:none;
-z-index:998;
-opacity:.035;
-background:repeating-linear-gradient(to bottom,transparent 0,transparent 4px,rgba(255,255,255,.05) 5px);
-}
-.screen{
-width:100%;
-min-height:100vh;
-}
-.entry{
-min-height:100vh;
-padding:24px 30px;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-overflow:hidden;
-}
-.hud{
-width:100%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:15px;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:9px;
-letter-spacing:.14em;
-text-transform:uppercase;
-position:relative;
-z-index:5;
-}
-.online{
-color:var(--green);
-}
-.bottom{
-border-top:1px solid var(--line);
-padding-top:14px;
-}
-.center{
-width:min(900px,100%);
-margin:auto;
-padding:45px 0 55px;
-text-align:center;
-}
-.label{
-color:var(--bright);
-font-family:"DM Mono",monospace;
-font-size:10px;
-letter-spacing:.27em;
-text-transform:uppercase;
-}
-/* MASCOT */
-.mascot{
-position:relative;
-width:190px;
-height:210px;
-margin:0 auto 5px;
-cursor:pointer;
-animation:float 4s ease-in-out infinite;
-filter:drop-shadow(0 0 30px rgba(157,78,221,.4));
-}
-.ghost{
-position:absolute;
-z-index:5;
-left:45px;
-top:40px;
-width:100px;
-height:116px;
-background:linear-gradient(145deg,#fffaff 0%,#e5d6ed 45%,#a16bbd 100%);
-border-radius:55px 55px 25px 25px;
-box-shadow:inset -10px -10px 0 rgba(65,20,90,.1),0 0 35px rgba(199,125,255,.3);
-}
-.ghost:after{
-content:"";
-position:absolute;
-left:0;
-bottom:-1px;
-width:100%;
-height:37px;
-background:inherit;
-clip-path:polygon(0 15%,18% 55%,35% 15%,52% 65%,70% 15%,88% 55%,100% 15%,100% 100%,0 100%);
-}
-.eye{
-position:absolute;
-z-index:8;
-top:43px;
-width:13px;
-height:21px;
-background:#14091a;
-border-radius:50%;
-}
-.eye.left{
-left:28px;
-transform:rotate(8deg);
-}
-.eye.right{
-right:28px;
-transform:rotate(-8deg);
-}
-.mouth{
-position:absolute;
-z-index:8;
-top:72px;
-left:42px;
-width:17px;
-height:10px;
-border-bottom:3px solid #14091a;
-border-radius:50%;
-}
-.flame{
-position:absolute;
-z-index:2;
-background:linear-gradient(180deg,#e0a1ff,#9d4edd 48%,#4b127f);
-clip-path:polygon(50% 100%,5% 75%,20% 53%,8% 18%,42% 39%,48% 0,65% 37%,88% 13%,77% 55%,100% 73%);
-animation:flame .65s ease-in-out infinite alternate;
-}
-.f1{
-width:150px;
-height:180px;
-left:20px;
-top:8px;
-opacity:.6;
-}
-.f2{
-width:92px;
-height:132px;
-left:0;
-top:62px;
-opacity:.85;
-animation-delay:-.2s;
-}
-.f3{
-width:92px;
-height:138px;
-right:0;
-top:53px;
-opacity:.8;
-animation-delay:-.4s;
-}
-.mascot:hover{
-transform:scale(1.06) rotate(-2deg);
-}
-.mascot:hover .flame{
-animation-duration:.15s;
-filter:blur(1px);
-}
-/* TITLE */
-h1{
-font-size:clamp(82px,16vw,175px);
-line-height:.75;
-letter-spacing:-.09em;
-margin:5px 0 32px;
-font-weight:700;
-text-transform:uppercase;
-}
-h1 span{
-color:transparent;
--webkit-text-stroke:1px var(--bright);
-}
-/* TERMINAL */
-.terminal{
-width:min(540px,100%);
-margin:auto;
-padding:17px 19px;
-border:1px solid var(--line);
-background:rgba(10,7,13,.82);
-text-align:left;
-font-family:"DM Mono",monospace;
-font-size:10px;
-line-height:2;
-color:var(--muted);
-}
-.terminal strong{
-color:var(--white);
-}
-.green{
-color:var(--green);
-}
-/* MESSAGE */
-.message{
-width:min(540px,100%);
-margin:12px auto 22px;
-padding:17px;
-border:1px solid rgba(210,138,255,.22);
-background:linear-gradient(135deg,rgba(157,78,221,.09),rgba(0,0,0,.4));
-text-align:left;
-box-shadow:0 0 35px rgba(157,78,221,.12);
-}
-.message-head{
-display:flex;
-justify-content:space-between;
-margin-bottom:13px;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:8px;
-letter-spacing:.12em;
-}
-.message-text{
-font-size:20px;
-}
-.cursor{
-color:var(--bright);
-animation:blink .8s steps(1) infinite;
-}
-/* BUTTONS */
-.actions{
-display:flex;
-justify-content:center;
-gap:9px;
-}
-.primary,
-.secondary,
-.enter,
-.escape,
-.back{
-border:0;
-transition:.25s ease;
-}
-.primary{
-min-width:220px;
-padding:15px 18px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:30px;
-background:var(--purple);
-color:white;
-font-family:"DM Mono",monospace;
-font-size:10px;
-letter-spacing:.08em;
-}
-.primary:hover{
-background:var(--bright);
-color:#14091a;
-transform:translateY(-3px);
-box-shadow:0 12px 35px rgba(157,78,221,.35);
-}
-.secondary{
-padding:15px 18px;
-background:transparent;
-border:1px solid var(--line);
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:10px;
-}
-/* MESSAGE SCREEN */
-.message-screen{
-min-height:100vh;
-display:grid;
-place-items:center;
-padding:25px;
-}
-.message-stage{
-width:min(850px,100%);
-text-align:center;
-}
-.stage{
-display:flex;
-justify-content:space-between;
-border-bottom:1px solid var(--line);
-padding-bottom:14px;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:9px;
-letter-spacing:.13em;
-}
-.big{
-min-height:190px;
-display:grid;
-place-items:center;
-padding:20px;
-font-size:clamp(38px,8vw,88px);
-font-weight:600;
-letter-spacing:-.07em;
-}
-.typing{
-min-height:22px;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:10px;
-}
-.seen{
-margin-top:20px;
-color:var(--green);
-font-family:"DM Mono",monospace;
-font-size:9px;
-letter-spacing:.2em;
-}
-.enter{
-margin-top:42px;
-padding:16px 22px;
-background:white;
-color:black;
-font-family:"DM Mono",monospace;
-font-size:10px;
-}
-.enter:hover{
-background:var(--bright);
-transform:translateY(-3px);
-}
-/* GHOST ZONE */
-.zone{
-padding:30px;
-}
-.zone-head{
-width:min(1080px,100%);
-margin:0 auto 40px;
-padding-bottom:28px;
-border-bottom:1px solid var(--line);
-display:flex;
-justify-content:space-between;
-align-items:flex-end;
-}
-.zone-title{
-margin-top:8px;
-font-size:clamp(48px,8vw,105px);
-line-height:.82;
-letter-spacing:-.08em;
-}
-.coords{
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:9px;
-line-height:1.8;
-text-align:right;
-}
-.cards{
-width:min(1080px,100%);
-margin:auto;
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-}
-.card{
-min-height:225px;
-position:relative;
-padding:24px;
-border:1px solid var(--line);
-background:var(--panel);
-color:white;
-text-align:left;
-overflow:hidden;
-transition:.3s;
-}
-.card:before{
-content:"";
-position:absolute;
-inset:0;
-background:linear-gradient(125deg,rgba(157,78,221,.09),transparent 65%);
-}
-.card:hover{
-transform:translateY(-5px);
-border-color:var(--purple);
-background:var(--panel2);
-box-shadow:0 0 35px rgba(157,78,221,.15);
-}
-.number{
-position:relative;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:9px;
-}
-.icon{
-position:relative;
-display:block;
-margin:38px 0 23px;
-color:var(--bright);
-font-size:27px;
-}
-.card strong{
-position:relative;
-display:block;
-font-size:17px;
-}
-.card small{
-position:relative;
-display:block;
-margin-top:7px;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:9px;
-}
-.arrow{
-position:absolute;
-right:21px;
-bottom:19px;
-color:var(--bright);
-font-family:"DM Mono",monospace;
-}
-.danger-card:hover{
-border-color:var(--red);
-}
-.zone-foot{
-width:min(1080px,100%);
-margin:45px auto 0;
-padding-top:14px;
-border-top:1px solid var(--line);
-display:flex;
-justify-content:space-between;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:8px;
-}
-.back{
-background:transparent;
-color:var(--muted);
-}
-/* MODAL */
-.modal{
-position:fixed;
-inset:0;
-z-index:500;
-display:grid;
-place-items:center;
-padding:20px;
-}
-.backdrop{
-position:absolute;
-inset:0;
-background:rgba(0,0,0,.82);
-backdrop-filter:blur(8px);
-}
-.modal-window{
-width:min(620px,100%);
-max-height:85vh;
-overflow-y:auto;
-position:relative;
-z-index:2;
-border:1px solid var(--purple);
-background:#09060c;
-box-shadow:0 0 60px rgba(157,78,221,.2);
-}
-.modal-head{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:13px 16px;
-border-bottom:1px solid var(--line);
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:8px;
-}
-.close{
-border:0;
-background:transparent;
-color:white;
-font-size:21px;
-}
-.modal-body{
-padding:28px;
-color:#d7cbe0;
-font-family:"DM Mono",monospace;
-font-size:11px;
-line-height:2;
-}
-.modal-body h2{
-margin-bottom:18px;
-color:white;
-font-family:"Space Grotesk",sans-serif;
-font-size:31px;
-line-height:1;
-}
-.highlight{
-color:var(--bright);
-}
-.error{
-color:var(--red);
-}
-/* VOID */
-.void{
-position:fixed;
-inset:0;
-z-index:700;
-display:grid;
-place-items:center;
-background:#000;
-text-align:center;
-}
-.void-content{
-width:min(700px,90%);
-}
-.void-ghost{
-font-size:75px;
-animation:float 2s ease-in-out infinite;
-}
-.void-label{
-margin-top:20px;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:9px;
-letter-spacing:.2em;
-}
-.void h2{
-margin:25px 0;
-font-size:clamp(48px,10vw,100px);
-line-height:.78;
-letter-spacing:-.09em;
-}
-.void h2 span{
-color:transparent;
--webkit-text-stroke:1px var(--bright);
-}
-.void-terminal{
-display:flex;
-flex-direction:column;
-gap:5px;
-color:var(--muted);
-font-family:"DM Mono",monospace;
-font-size:9px;
-}
-.escape{
-margin-top:35px;
-padding:14px 20px;
-background:white;
-color:black;
-font-family:"DM Mono",monospace;
-font-size:9px;
-}
-/* NOTIFICATIONS */
-.notifications{
-position:fixed;
-z-index:800;
-top:62px;
-right:18px;
-width:min(300px,calc(100% - 36px));
-display:flex;
-flex-direction:column;
-gap:8px;
-pointer-events:none;
-}
-.notification{
-padding:12px 14px;
-border:1px solid var(--line);
-background:rgba(10,7,13,.96);
-color:#d9cde2;
-font-family:"DM Mono",monospace;
-font-size:8px;
-line-height:1.6;
-animation:notify .3s ease forwards;
-box-shadow:0 10px 35px rgba(0,0,0,.4);
-}
-.notification strong{
-color:var(--bright);
-}
-/* ANIMATIONS */
-@keyframes float{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-13px)}
-}
-@keyframes flame{
-from{transform:scaleY(.93) rotate(-2deg)}
-to{transform:scaleY(1.08) rotate(2deg)}
-}
-@keyframes blink{
-0%,48%{opacity:1}
-49%,100%{opacity:0}
-}
-@keyframes notify{
-from{opacity:0;transform:translateX(25px)}
-to{opacity:1;transform:translateX(0)}
-}
-@keyframes glitch{
-0%{transform:translate(0)}
-25%{transform:translate(-3px,2px)}
-50%{transform:translate(3px,-2px)}
-75%{transform:translate(-2px,-1px)}
-100%{transform:translate(0)}
-}
-.glitch{
-animation:glitch .25s linear;
-}
-/* MOBILE */
-@media(max-width:650px){
-.entry{
-padding:17px;
-}
-.hud{
-font-size:7px;
-}
-.topbar span:nth-child(2){
-display:none;
-}
-.center{
-padding:30px 0 40px;
-}
-.mascot{
-transform:scale(.88);
-margin-bottom:0;
-}
-h1{
-font-size:24vw;
-margin-bottom:26px;
-}
-.terminal{
-font-size:8px;
-padding:14px;
-}
-.message-text{
-font-size:17px;
-}
-.actions{
-flex-direction:column;
-}
-.primary,
-.secondary{
-width:100%;
-justify-content:center;
-}
-.zone-head{
-align-items:flex-start;
-flex-direction:column;
-gap:18px;
-}
-.zone-title{
-font-size:56px;
-}
-.coords{
-text-align:left;
-}
-.cards{
-grid-template-columns:1fr;
-}
-.card{
-min-height:190px;
-}
-.zone-foot{
-flex-direction:column;
-gap:15px;
-}
-.big{
-min-height:230px;
-}
-.modal-body{
-padding:22px;
-}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #050308;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+button {
+  font: inherit;
+}
+
+.screen {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 35px 35px;
+  pointer-events: none;
+}
+
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(255,255,255,.018) 4px
+  );
+}
+
+/* =========================
+   ENTRY SCREEN
+========================= */
+
+.entry-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.top-hud {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #777;
+  text-transform: uppercase;
+}
+
+.top-hud span:last-child {
+  color: #b8ff65;
+}
+
+/* =========================
+   GHOST + REAL FLAME
+========================= */
+
+.ghost-stage {
+  position: relative;
+  width: 210px;
+  height: 230px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+/* ONE structured flame behind the ghost */
+
+.ghost-flame {
+  position: absolute;
+  width: 115px;
+  height: 175px;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  filter: drop-shadow(0 0 22px rgba(150, 55, 255, .75));
+}
+
+/* outer flame */
+.ghost-flame::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: #8d35ff;
+  clip-path: polygon(
+    50% 100%,
+    20% 83%,
+    8% 60%,
+    20% 68%,
+    17% 38%,
+    35% 52%,
+    34% 19%,
+    49% 42%,
+    61% 5%,
+    68% 39%,
+    86% 22%,
+    80% 51%,
+    96% 43%,
+    88% 72%,
+    75% 87%
+  );
+}
+
+/* inner flame */
+.ghost-flame::after {
+  content: "";
+  position: absolute;
+  width: 48px;
+  height: 90px;
+  left: 34px;
+  bottom: 12px;
+  background: #dca7ff;
+  clip-path: polygon(
+    50% 100%,
+    20% 76%,
+    27% 49%,
+    42% 62%,
+    43% 25%,
+    59% 48%,
+    68% 0%,
+    73% 48%,
+    88% 38%,
+    78% 74%
+  );
+  filter: drop-shadow(0 0 8px rgba(220,167,255,.8));
+}
+
+/* actual ghost emoji */
+.ghost {
+  position: relative;
+  z-index: 3;
+  font-size: 125px;
+  line-height: 1;
+  filter:
+    drop-shadow(0 0 8px rgba(255,255,255,.7))
+    drop-shadow(0 0 24px rgba(143, 55, 255, .7));
+  animation: ghostFloat 3s ease-in-out infinite;
+  user-select: none;
+  cursor: pointer;
+}
+
+@keyframes ghostFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+.ghost:hover {
+  animation: ghostGlitch .35s infinite;
+}
+
+@keyframes ghostGlitch {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-4px, 2px) rotate(-3deg);
+  }
+
+  50% {
+    transform: translate(4px, -2px) rotate(3deg);
+  }
+
+  75% {
+    transform: translate(-2px, -3px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* =========================
+   MAIN TEXT
+========================= */
+
+.system-label {
+  color: #a35cff;
+  font-size: 11px;
+  letter-spacing: 5px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.main-title {
+  font-size: clamp(58px, 17vw, 125px);
+  font-weight: 900;
+  line-height: .82;
+  letter-spacing: -6px;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow:
+    3px 0 #8d35ff,
+    -2px 0 rgba(255,255,255,.15);
+}
+
+.subtitle {
+  color: #777;
+  margin-top: 18px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+/* =========================
+   TERMINAL
+========================= */
+
+.terminal {
+  width: min(430px, 100%);
+  margin-top: 28px;
+  padding: 17px;
+  border: 1px solid #29202f;
+  background: rgba(12, 7, 17, .8);
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.8;
+  color: #777;
+}
+
+.terminal .green {
+  color: #b8ff65;
+}
+
+.terminal .purple {
+  color: #b66cff;
+}
+
+.terminal .red {
+  color: #ff526d;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message-box {
+  width: min(430px, 100%);
+  margin-top: 12px;
+  padding: 18px;
+  border: 1px solid #382344;
+  background: #0d0812;
+}
+
+.sender {
+  color: #8d35ff;
+  font-size: 9px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.message {
+  font-family: monospace;
+  font-size: 15px;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  width: min(430px, 100%);
+  margin-top: 15px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 15px 10px;
+  background: #8d35ff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: .2s;
+}
+
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(141,53,255,.5);
+}
+
+.action-btn.secondary {
+  background: transparent;
+  border: 1px solid #302438;
+  color: #777;
+}
+
+.bottom-hud {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  color: #4d4652;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+/* =========================
+   MESSAGE SCREEN
+========================= */
+
+.message-screen {
+  min-height: 100vh;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+  position: relative;
+  z-index: 3;
+}
+
+.message-screen.active {
+  display: flex;
+}
+
+.transmission {
+  width: min(600px, 100%);
+}
+
+.transmission-label {
+  color: #8d35ff;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin-bottom: 25px;
+}
+
+.chat-line {
+  border-left: 2px solid #8d35ff;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,.025);
+  font-family: monospace;
+}
+
+.typing {
+  color: #777;
+  font-size: 12px;
+}
+
+.ghosted {
+  color: #ff526d;
+  font-size: clamp(40px, 12vw, 80px);
+  font-weight: 900;
+  margin-top: 30px;
+}
+
+.enter-zone {
+  margin-top: 35px;
+}
+
+/* =========================
+   GHOST ZONE
+========================= */
+
+.zone-screen {
+  min-height: 100vh;
+  display: none;
+  padding: 80px 20px;
+  position: relative;
+  z-index: 3;
+}
+
+.zone-screen.active {
+  display: block;
+}
+
+.zone-wrap {
+  max-width: 950px;
+  margin: auto;
+}
+
+.zone-header {
+  margin-bottom: 50px;
+}
+
+.zone-small {
+  color: #8d35ff;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+
+.zone-title {
+  font-size: clamp(55px, 13vw, 120px);
+  font-weight: 900;
+  letter-spacing: -5px;
+  line-height: .85;
+  margin-top: 15px;
+}
+
+.zone-meta {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-family: monospace;
+  font-size: 10px;
+  color: #666;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.zone-card {
+  min-height: 190px;
+  padding: 25px;
+  border: 1px solid #2c2034;
+  background: #0b070f;
+  cursor: pointer;
+  transition: .25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.zone-card:hover {
+  border-color: #8d35ff;
+  transform: translateY(-5px);
+}
+
+.zone-card h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.zone-card p {
+  color: #777;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.card-number {
+  color: #8d35ff;
+  font-family: monospace;
+  font-size: 10px;
+  margin-bottom: 30px;
+}
+
+/* =========================
+   VOID
+========================= */
+
+.void-screen {
+  min-height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 4;
+  padding: 20px;
+}
+
+.void-screen.active {
+  display: flex;
+}
+
+.void-text {
+  font-size: clamp(40px, 12vw, 100px);
+  font-weight: 900;
+  letter-spacing: -5px;
+  line-height: .85;
+}
+
+.cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1em;
+  background: #8d35ff;
+  vertical-align: bottom;
+  animation: blink .8s infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 20;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-box {
+  width: min(500px, 100%);
+  border: 1px solid #8d35ff;
+  background: #09050d;
+  padding: 30px;
+  box-shadow: 0 0 50px rgba(141,53,255,.2);
+}
+
+.modal-label {
+  color: #8d35ff;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.modal-box h2 {
+  font-size: 35px;
+  margin-bottom: 15px;
+}
+
+.modal-box p {
+  color: #999;
+  line-height: 1.7;
+  font-size: 13px;
+}
+
+.close-modal {
+  margin-top: 25px;
+  background: transparent;
+  border: 1px solid #3b2b44;
+  color: #aaa;
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
+.notification {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: min(310px, calc(100% - 36px));
+  padding: 15px;
+  border: 1px solid #40264f;
+  background: #0c0710;
+  font-family: monospace;
+  font-size: 11px;
+  z-index: 30;
+  transform: translateY(150px);
+  transition: .4s;
+}
+
+.notification.show {
+  transform: translateY(0);
+}
+
+.notification strong {
+  color: #8d35ff;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+  .ghost-stage {
+    width: 180px;
+    height: 200px;
+  }
+
+  .ghost {
+    font-size: 105px;
+  }
+
+  .ghost-flame {
+    width: 100px;
+    height: 150px;
+  }
+
+  .main-title {
+    letter-spacing: -4px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .zone-card {
+    min-height: 160px;
+  }
+
+  .top-hud,
+  .bottom-hud {
+    font-size: 8px;
+  }
+
+  .bottom-hud {
+    gap: 10px;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
 }
 </style>
 </head>
+
 <body>
-<div class="noise"></div>
-<div class="scanlines"></div>
-<div class="notifications" id="notifications"></div>
-<main id="entry" class="screen entry">
-<div class="hud">
-<span>GHOSTPING NETWORK</span>
-<span>NODE_404</span>
-<span class="online">● ONLINE</span>
-</div>
-<div class="center">
-<div class="mascot" id="mascot">
-<div class="flame f1"></div>
-<div class="flame f2"></div>
-<div class="flame f3"></div>
-<div class="ghost">
-<span class="eye left"></span>
-<span class="eye right"></span>
-<span class="mouth"></span>
-</div>
-</div>
-<p class="label">GHOSTPING.EXE</p>
-<h1>
-YOU<br>
-<span>UP?</span>
-</h1>
-<div class="terminal">
-<div><span class="green">●</span> CONNECTION: ESTABLISHED</div>
-<div>› SIGNAL: <strong>UNSTABLE</strong></div>
-<div>› REPLY SERVER: <strong>DEAD</strong></div>
-<div>› UNKNOWN USER DETECTED</div>
-</div>
-<div class="message">
-<div class="message-head">
-<span>UNKNOWN SENDER</span>
-<span>00:00</span>
-</div>
-<div class="message-text">
-hey, you there? <span class="cursor">▋</span>
-</div>
-</div>
-<div class="actions">
-<button class="primary" id="open">
-<span>OPEN MESSAGE</span>
-<span>↗</span>
-</button>
-<button class="secondary" id="ignore">
-IGNORE
-</button>
-</div>
-</div>
-<div class="hud bottom">
-<span>DON'T BLINK</span>
-<span>GHOSTPING // v0.0.404</span>
-</div>
+
+<!-- =========================
+     ENTRY
+========================= -->
+
+<main id="entry" class="screen entry-screen">
+
+  <div class="top-hud">
+    <span>GHOSTPING NETWORK</span>
+    <span>NODE_404</span>
+    <span>ONLINE</span>
+  </div>
+
+  <div class="ghost-stage">
+
+    <!-- structured flame behind ghost -->
+    <div class="ghost-flame"></div>
+
+    <!-- actual ghost emoji -->
+    <div class="ghost" id="ghost">👻</div>
+
+  </div>
+
+  <p class="system-label">GHOSTPING.EXE</p>
+
+  <h1 class="main-title">YOU UP?</h1>
+
+  <p class="subtitle">
+    something found its way into your device.
+  </p>
+
+  <div class="terminal">
+    <div>CONNECTION: <span class="green">ESTABLISHED</span></div>
+    <div>SIGNAL: <span class="purple">UNSTABLE</span></div>
+    <div>REPLY SERVER: <span class="red">DEAD</span></div>
+    <div>UNKNOWN USER: <span class="purple">DETECTED</span></div>
+  </div>
+
+  <div class="message-box">
+    <p class="sender">UNKNOWN SENDER</p>
+    <p class="message">hey, you there?</p>
+  </div>
+
+  <div class="button-row">
+    <button class="action-btn" id="openMessage">
+      OPEN MESSAGE
+    </button>
+
+    <button class="action-btn secondary" id="ignoreMessage">
+      IGNORE
+    </button>
+  </div>
+
+  <div class="bottom-hud">
+    <span>DON'T BLINK</span>
+    <span>GHOSTPING // v0.0.404</span>
+  </div>
+
 </main>
-<section id="messageScreen" class="screen message-screen hidden">
-<div class="message-stage">
-<div class="stage">
-<span>INCOMING TRANSMISSION</span>
-<span>00:00</span>
-</div>
-<div class="big" id="big">
-hey, you there?
-</div>
-<div class="typing" id="typing"></div>
-<div class="seen hidden" id="seen">
-SEEN
-</div>
-<button class="enter hidden" id="enter">
-ENTER THE GHOST ZONE →
-</button>
-</div>
+
+
+<!-- =========================
+     MESSAGE
+========================= -->
+
+<section id="messageScreen" class="screen message-screen">
+
+  <div class="transmission">
+
+    <p class="transmission-label">
+      INCOMING TRANSMISSION // UNKNOWN
+    </p>
+
+    <div id="chat"></div>
+
+    <div id="ghosted" class="ghosted"></div>
+
+    <button
+      id="enterZone"
+      class="action-btn enter-zone"
+      style="display:none;">
+      ENTER THE GHOST ZONE →
+    </button>
+
+  </div>
+
 </section>
-<section id="zone" class="screen zone hidden">
-<div class="zone-head">
-<div>
-<p class="label">LOCATION UNKNOWN</p>
-<h2 class="zone-title">
-THE<br>
-GHOST ZONE
-</h2>
-</div>
-<div class="coords">
-X: 00.404<br>
-Y: ???<br>
-STATUS: UNSTABLE
-</div>
-</div>
-<div class="cards">
-<button class="card" id="status">
 
-01
-◉
-CHECK YOUR STATUS
-Run an unauthorized scan.
-↗
 
-</button>
-<button class="card" id="talk">
+<!-- =========================
+     GHOST ZONE
+========================= -->
 
-02
-⌁
-TALK TO GHOSTPING
-It probably won’t reply.
-↗
+<section id="zoneScreen" class="screen zone-screen">
 
-</button>
-<button class="card" id="lore">
+  <div class="zone-wrap">
 
-03
-▣
-CLASSIFIED FILE
-Somebody leaked the lore.
-↗
+    <div class="zone-header">
 
-</button>
-<button class="card danger-card" id="void">
+      <p class="zone-small">
+        LOCATION FOUND // CONNECTION UNSTABLE
+      </p>
 
-04
-◌
-ENTER THE VOID
-There is nothing here.
-↗
+      <h2 class="zone-title">
+        THE<br>GHOST ZONE
+      </h2>
 
-</button>
-</div>
-<div class="zone-foot">
+      <div class="zone-meta">
+        <span>X: 00.404</span>
+        <span>Y: ???</span>
+        <span>STATUS: UNSTABLE</span>
+      </div>
 
-GHOSTPING // PRIVATE NETWORK
+    </div>
 
-<button class="back" id="back">
-← GO BACK
-</button>
-</div>
+    <div class="cards">
+
+      <div class="zone-card" id="statusCard">
+        <div class="card-number">01 // SCAN</div>
+        <h3>CHECK YOUR STATUS</h3>
+        <p>
+          Find out how badly the internet has already affected you.
+        </p>
+      </div>
+
+      <div class="zone-card" id="talkCard">
+        <div class="card-number">02 // TRANSMIT</div>
+        <h3>TALK TO GHOSTPING</h3>
+        <p>
+          Send a message. Maybe it will reply. Probably not.
+        </p>
+      </div>
+
+      <div class="zone-card" id="loreCard">
+        <div class="card-number">03 // CLASSIFIED</div>
+        <h3>CLASSIFIED FILE</h3>
+        <p>
+          There are things about Ghostping you probably shouldn't know.
+        </p>
+      </div>
+
+      <div class="zone-card" id="voidCard">
+        <div class="card-number">04 // WARNING</div>
+        <h3>ENTER THE VOID</h3>
+        <p>
+          No signal. No message. No explanation.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
 </section>
-<div class="modal hidden" id="modal">
-<div class="backdrop" id="backdrop"></div>
-<div class="modal-window">
-<div class="modal-head">
 
-SYSTEM MESSAGE
 
-<button class="close" id="close">
-×
-</button>
-</div>
-<div class="modal-body" id="modalBody"></div>
-</div>
-</div>
-<section class="void hidden" id="voidScreen">
-<div class="void-content">
-<div class="void-ghost">👻</div>
-<p class="void-label">
-YOU ENTERED THE VOID
-</p>
-<h2>
-THERE IS<br>
-<span>NOTHING</span><br>
-HERE.
-</h2>
-<div class="void-terminal">
-<span>› searching...</span>
-<span>› searching...</span>
-<span>› searching...</span>
-<span>› still nothing.</span>
-<span class="error">› except you.</span>
-</div>
-<button class="escape" id="escape">
-GET ME OUT →
-</button>
-</div>
+<!-- =========================
+     VOID
+========================= -->
+
+<section id="voidScreen" class="screen void-screen">
+
+  <div>
+    <div class="void-text">
+      YOU<br>
+      FOUND<br>
+      NOTHING<span class="cursor"></span>
+    </div>
+
+    <button
+      id="backFromVoid"
+      class="action-btn"
+      style="margin-top:35px;">
+      GO BACK
+    </button>
+  </div>
+
 </section>
+
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div id="modal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-label">
+      GHOSTPING // CLASSIFIED
+    </div>
+
+    <h2 id="modalTitle">SYSTEM</h2>
+
+    <p id="modalText"></p>
+
+    <button id="closeModal" class="close-modal">
+      CLOSE FILE
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     NOTIFICATION
+========================= -->
+
+<div id="notification" class="notification">
+  <strong>GHOSTPING SYSTEM</strong>
+  <span id="notificationText"></span>
+</div>
+
+
 <script>
-const entry=document.getElementById("entry");
-const messageScreen=document.getElementById("messageScreen");
-const zone=document.getElementById("zone");
-const open=document.getElementById("open");
-const ignore=document.getElementById("ignore");
-const big=document.getElementById("big");
-const typing=document.getElementById("typing");
-const seen=document.getElementById("seen");
-const enter=document.getElementById("enter");
-const mascot=document.getElementById("mascot");
-const notifications=document.getElementById("notifications");
-const modal=document.getElementById("modal");
-const modalTitle=document.getElementById("modalTitle");
-const modalBody=document.getElementById("modalBody");
-const voidScreen=document.getElementById("voidScreen");
-function show(screen){
-entry.classList.add("hidden");
-messageScreen.classList.add("hidden");
-zone.classList.add("hidden");
-screen.classList.remove("hidden");
-window.scrollTo(0,0);
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const entry = document.getElementById("entry");
+const messageScreen = document.getElementById("messageScreen");
+const zoneScreen = document.getElementById("zoneScreen");
+const voidScreen = document.getElementById("voidScreen");
+
+const openMessage = document.getElementById("openMessage");
+const ignoreMessage = document.getElementById("ignoreMessage");
+
+const chat = document.getElementById("chat");
+const ghosted = document.getElementById("ghosted");
+const enterZone = document.getElementById("enterZone");
+
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalText = document.getElementById("modalText");
+const closeModal = document.getElementById("closeModal");
+
+const notification = document.getElementById("notification");
+const notificationText = document.getElementById("notificationText");
+
+const ghost = document.getElementById("ghost");
+
+
+/* =========================
+   SCREEN SWITCHING
+========================= */
+
+function showOnly(screen) {
+
+  entry.style.display = "none";
+  messageScreen.classList.remove("active");
+  zoneScreen.classList.remove("active");
+  voidScreen.classList.remove("active");
+
+  if (screen === entry) {
+    entry.style.display = "flex";
+  }
+
+  if (screen === messageScreen) {
+    messageScreen.classList.add("active");
+  }
+
+  if (screen === zoneScreen) {
+    zoneScreen.classList.add("active");
+  }
+
+  if (screen === voidScreen) {
+    voidScreen.classList.add("active");
+  }
+
+  window.scrollTo(0, 0);
 }
-function notify(message,type="normal"){
-const n=document.createElement("div");
-n.className="notification";
-let title="GHOSTPING";
-if(type==="danger") title="WARNING";
-if(type==="success") title="SYSTEM";
-n.innerHTML="<strong>"+title+"</strong><br>"+message;
-notifications.appendChild(n);
-setTimeout(()=>{
-n.style.opacity="0";
-n.style.transform="translateX(30px)";
-setTimeout(()=>{
-n.remove();
-},300);
-},3300);
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+function notify(text) {
+
+  notificationText.textContent = text;
+
+  notification.classList.add("show");
+
+  setTimeout(() => {
+    notification.classList.remove("show");
+  }, 3500);
 }
-/* OPEN MESSAGE */
-open.addEventListener("click",()=>{
-show(messageScreen);
-big.textContent="hey, you there?";
-typing.textContent="";
-seen.classList.add("hidden");
-enter.classList.add("hidden");
-notify("MESSAGE OPENED.");
-setTimeout(()=>{
-seen.classList.remove("hidden");
-setTimeout(()=>{
-typing.textContent="Ghostping is typing...";
-setTimeout(()=>{
-typing.textContent="";
-big.textContent="typing.";
-setTimeout(()=>{
-big.textContent="typing..";
-setTimeout(()=>{
-big.textContent="typing...";
-setTimeout(()=>{
-big.textContent="Ghostping stopped typing.";
-setTimeout(()=>{
-typing.textContent="Ghostping is typing...";
-setTimeout(()=>{
-typing.textContent="";
-big.textContent="GHOSTED.";
-enter.classList.remove("hidden");
-notify("REPLY FAILED.","danger");
-notify("USER HAS BEEN GHOSTED.","danger");
-},1800);
-},1300);
-},700);
-},700);
-},700);
-},1700);
-},1000);
-},1200);
+
+
+/* =========================
+   IGNORE BUTTON
+========================= */
+
+ignoreMessage.addEventListener("click", () => {
+
+  notify("you really thought ignoring it would work.");
+
+  setTimeout(() => {
+    notify("Ghostping saw that.");
+  }, 4000);
+
 });
-/* ENTER ZONE */
-enter.addEventListener("click",()=>{
-show(zone);
-notify("WELCOME TO THE GHOST ZONE.","success");
-notify("ACCESS LEVEL: QUESTIONABLE");
+
+
+/* =========================
+   OPEN MESSAGE
+========================= */
+
+openMessage.addEventListener("click", () => {
+
+  showOnly(messageScreen);
+
+  chat.innerHTML = "";
+  ghosted.textContent = "";
+  enterZone.style.display = "none";
+
+  const messages = [
+
+    {
+      text: "hey, you there?",
+      delay: 500
+    },
+
+    {
+      text: "SEEN",
+      delay: 1800
+    },
+
+    {
+      text: "Ghostping is typing...",
+      delay: 2800
+    },
+
+    {
+      text: "typing.",
+      delay: 3500
+    },
+
+    {
+      text: "typing..",
+      delay: 3900
+    },
+
+    {
+      text: "typing...",
+      delay: 4300
+    },
+
+    {
+      text: "Ghostping stopped typing.",
+      delay: 5100
+    },
+
+    {
+      text: "Ghostping is typing...",
+      delay: 6200
+    }
+
+  ];
+
+  messages.forEach((item) => {
+
+    setTimeout(() => {
+
+      const div = document.createElement("div");
+
+      div.className = "chat-line";
+
+      div.textContent = item.text;
+
+      chat.appendChild(div);
+
+    }, item.delay);
+
+  });
+
+
+  setTimeout(() => {
+
+    ghosted.textContent = "GHOSTED.";
+
+  }, 7600);
+
+
+  setTimeout(() => {
+
+    enterZone.style.display = "block";
+
+  }, 8500);
+
 });
-/* IGNORE BUTTON */
-let ignoreCount=0;
-const ignoreWords=[
-"IGNORE",
-"WAIT",
-"ARE YOU SURE?",
-"DON'T DO THAT",
-"TOO LATE",
-"NOPE",
-"YOU CAN'T ESCAPE",
-"FINE."
+
+
+/* =========================
+   ENTER GHOST ZONE
+========================= */
+
+enterZone.addEventListener("click", () => {
+
+  showOnly(zoneScreen);
+
+});
+
+
+/* =========================
+   MODAL
+========================= */
+
+function openModal(title, text) {
+
+  modalTitle.textContent = title;
+  modalText.textContent = text;
+
+  modal.classList.add("active");
+
+}
+
+closeModal.addEventListener("click", () => {
+
+  modal.classList.remove("active");
+
+});
+
+
+modal.addEventListener("click", (e) => {
+
+  if (e.target === modal) {
+    modal.classList.remove("active");
+  }
+
+});
+
+
+/* =========================
+   STATUS
+========================= */
+
+document.getElementById("statusCard").addEventListener("click", () => {
+
+  openModal(
+    "YOUR STATUS",
+    "Signal detected. Attention span: 3%. Ghost tolerance: 87%. Chance of receiving a reply: statistically embarrassing."
+  );
+
+});
+
+
+/* =========================
+   TALK TO GHOSTPING
+========================= */
+
+document.getElementById("talkCard").addEventListener("click", () => {
+
+  openModal(
+    "TRANSMISSION",
+    "You: hello?\n\nGhostping: typing...\n\nGhostping: typing...\n\nGhostping: stopped typing.\n\nYou have been ghosted."
+  );
+
+});
+
+
+/* =========================
+   CLASSIFIED FILE
+========================= */
+
+document.getElementById("loreCard").addEventListener("click", () => {
+
+  openModal(
+    "FILE 00.404",
+    "Ghostping was never built to reply. It was built to appear, disappear, and leave you questioning whether the message ever existed."
+  );
+
+});
+
+
+/* =========================
+   VOID
+========================= */
+
+document.getElementById("voidCard").addEventListener("click", () => {
+
+  showOnly(voidScreen);
+
+});
+
+
+document.getElementById("backFromVoid").addEventListener("click", () => {
+
+  showOnly(zoneScreen);
+
+});
+
+
+/* =========================
+   GHOST SECRET
+========================= */
+
+let ghostClicks = 0;
+
+ghost.addEventListener("click", () => {
+
+  ghostClicks++;
+
+  if (ghostClicks === 1) {
+    notify("don't touch that.");
+  }
+
+  if (ghostClicks === 3) {
+    notify("seriously?");
+  }
+
+  if (ghostClicks === 5) {
+    notify("the ghost is getting annoyed.");
+  }
+
+  if (ghostClicks === 7) {
+
+    openModal(
+      "YOU FOUND IT",
+      "You clicked the ghost seven times. There is absolutely nothing here. Unless there is."
+    );
+
+    ghostClicks = 0;
+
+  }
+
+});
+
+
+/* =========================
+   RANDOM SYSTEM MESSAGES
+========================= */
+
+const randomMessages = [
+
+  "someone is watching this page.",
+
+  "reply server still dead.",
+
+  "ghost detected nearby.",
+
+  "you've been here for too long.",
+
+  "connection is pretending to be stable.",
+
+  "Ghostping knows you're still here.",
+
+  "message delivery failed successfully."
+
 ];
-function moveIgnore(){
-ignoreCount++;
-ignore.textContent=
-ignoreWords[Math.min(ignoreCount,ignoreWords.length-1)];
-if(ignoreCount>=3){
-const x=Math.random()*140-70;
-const y=Math.random()*100-50;
-ignore.style.transform=
-`translate(${x}px,${y}px)`;
-}
-if(ignoreCount===7){
-notify(
-"YOU REALLY THOUGHT YOU COULD IGNORE GHOSTPING.",
-"danger"
-);
-}
-}
-ignore.addEventListener("mouseenter",moveIgnore);
-ignore.addEventListener("touchstart",moveIgnore);
-/* BACK */
-document.getElementById("back").addEventListener("click",()=>{
-show(entry);
-notify("YOU CAME BACK.");
+
+
+setInterval(() => {
+
+  const random =
+    randomMessages[
+      Math.floor(Math.random() * randomMessages.length)
+    ];
+
+  notify(random);
+
+}, 9000);
+
+
+/* =========================
+   REFRESH JOKE
+========================= */
+
+window.addEventListener("beforeunload", () => {
+
+  console.log(
+    "%cWHY ARE YOU REFRESHING?",
+    "font-size:20px;color:#8d35ff;font-weight:bold;"
+  );
+
 });
-/* MASCOT */
-let mascotClicks=0;
-mascot.addEventListener("click",()=>{
-mascotClicks++;
-mascot.classList.remove("glitch");
-void mascot.offsetWidth;
-mascot.classList.add("glitch");
-if(mascotClicks===1)
-notify("don't touch that.");
-if(mascotClicks===3)
-notify("seriously?");
-if(mascotClicks===5)
-notify("the ghost is getting annoyed.");
-if(mascotClicks===7){
-notify("SECRET UNLOCKED.","success");
-openModal(
-"CLASSIFIED",
-`
-<h2>You found it.</h2>
-<p>Nobody knows why the ghost has flames.</p>
-<p>Nobody knows where the replies go.</p>
-<p>Nobody knows who started this.</p>
-<br>
-<p class="highlight">
-The only confirmed fact:
-<br><br>
-Ghostping never replies on time.
-</p>
-`
-);
-}
-});
-/* MODAL */
-function openModal(title,content){
-modalTitle.textContent=title;
-modalBody.innerHTML=content;
-modal.classList.remove("hidden");
-}
-function closeModal(){
-modal.classList.add("hidden");
-}
-document.getElementById("close")
-.addEventListener("click",closeModal);
-document.getElementById("backdrop")
-.addEventListener("click",closeModal);
-document.addEventListener("keydown",(e)=>{
-if(e.key==="Escape")
-closeModal();
-});
-/* STATUS */
-document.getElementById("status")
-.addEventListener("click",()=>{
-openModal(
-"UNAUTHORIZED SCAN",
-`
-<h2>YOUR STATUS</h2>
-<p>IDENTITY .......... <span class="highlight">UNKNOWN</span></p>
-<p>REPLY RATE ........ <span class="highlight">7%</span></p>
-<p>DOUBLE TEXTING .... <span class="error">HIGH</span></p>
-<p>GHOST RESISTANCE .. <span class="highlight">0%</span></p>
-<p>VIBES ............. <span class="highlight">QUESTIONABLE</span></p>
-<br>
-<p class="error">
-CONCLUSION:
-<br>
-YOU WOULD PROBABLY TEXT AGAIN.
-</p>
-`
-);
-});
-/* TALK */
-document.getElementById("talk")
-.addEventListener("click",()=>{
-openModal(
-"DIRECT LINE",
-`
-<h2>Talk to Ghostping</h2>
-<p>
-Send a message to the entity currently
-occupying this server.
-</p>
-<input
-id="ghostInput"
-type="text"
-maxlength="80"
-placeholder="say something..."
-style="
-width:100%;
-margin-top:20px;
-padding:14px;
-border:1px solid rgba(210,138,255,.2);
-background:#050308;
-color:white;
-outline:none;
-font-family:'DM Mono',monospace;
-font-size:11px;
-">
-<button
-id="sendGhost"
-style="
-margin-top:10px;
-padding:12px 17px;
-border:0;
-background:#9d4edd;
-color:white;
-font-family:'DM Mono',monospace;
-font-size:9px;
-cursor:pointer;
-">
-SEND
-</button>
-<div id="ghostReply" style="margin-top:20px;"></div>
-`
-);
-const input=document.getElementById("ghostInput");
-const send=document.getElementById("sendGhost");
-const reply=document.getElementById("ghostReply");
-send.addEventListener("click",()=>{
-if(!input.value.trim()){
-reply.textContent=
-"you need to actually say something.";
-return;
-}
-send.disabled=true;
-reply.textContent=
-"Ghostping is typing...";
-setTimeout(()=>{
-reply.textContent=
-"Ghostping stopped typing.";
-setTimeout(()=>{
-reply.innerHTML=
-'<span class="error">Ghostping left the conversation.</span>';
-notify("GHOSTPING HAS LEFT.","danger");
-},1800);
-},1500);
-});
-});
-/* LORE */
-document.getElementById("lore")
-.addEventListener("click",()=>{
-openModal(
-"FILE // 404",
-`
-<h2>THE LORE</h2>
-<p>
-At some point, someone sent a message.
-</p>
-<p>
-Someone else saw it.
-</p>
-<p>
-Then nothing happened.
-</p>
-<br>
-<p class="highlight">
-No reply.
-<br>
-No explanation.
-<br>
-No closure.
-</p>
-<br>
-<p>
-The silence became the meme.
-The meme became the signal.
-The signal became Ghostping.
-</p>
-<br>
-<p class="error">
-FILE STATUS:
-STILL UNRESOLVED.
-</p>
-`
-);
-});
-/* VOID */
-document.getElementById("void")
-.addEventListener("click",()=>{
-voidScreen.classList.remove("hidden");
-document.body.style.overflow="hidden";
-notify("YOU WERE WARNED.","danger");
-});
-document.getElementById("escape")
-.addEventListener("click",()=>{
-voidScreen.classList.add("hidden");
-document.body.style.overflow="";
-notify("VOID EXITED.");
-});
-/* RANDOM SYSTEM EVENTS */
-const events=[
-"someone is typing...",
-"someone stopped typing.",
-"connection unstable.",
-"you were almost replied to.",
-"reply detected. just kidding.",
-"ghostping is watching.",
-"message deleted.",
-"seen 00:04 ago.",
-"unknown user entered the network.",
-"signal lost.",
-"you still there?"
-];
-setInterval(()=>{
-const event=
-events[Math.floor(Math.random()*events.length)];
-notify(event);
-if(Math.random()>.72){
-document.body.classList.add("glitch");
-setTimeout(()=>{
-document.body.classList.remove("glitch");
-},250);
-}
-},9000);
-/* STARTUP */
-setTimeout(()=>{
-notify("UNKNOWN USER DETECTED.");
-},1800);
-setTimeout(()=>{
-notify("please don't get comfortable.");
-},4500);
-/* REFRESH JOKE */
-const refresh=[
-"WHY ARE YOU REFRESHING?",
-"you thought that would help?",
-"still here.",
-"refresh detected.",
-"nice try."
-];
-setTimeout(()=>{
-notify(
-refresh[Math.floor(Math.random()*refresh.length)]
-);
-},7000);
-/* DEVTOOLS */
+
+
+/* =========================
+   DEVTOOLS JOKE
+========================= */
+
 console.log(
-"%c👻 GHOSTPING",
-"font-size:30px;font-weight:bold;color:#d28aff;"
+  "%c👻 GHOSTPING NETWORK",
+  "font-size:24px;font-weight:bold;color:#8d35ff;"
 );
+
 console.log(
-"%cYou opened DevTools.",
-"font-size:14px;color:white;"
+  "%cYou weren't supposed to look in here.",
+  "font-size:13px;color:#aaa;"
 );
-console.log(
-"%cThat was probably a mistake.",
-"font-size:12px;color:#ff4568;"
-);
+
 </script>
+
 </body>
 </html>
