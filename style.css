@@ -1,137 +1,85 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+const openMessage = document.getElementById("openMessage");
+const messageBox = document.querySelector(".message-box");
+const message = document.querySelector(".message");
+const sender = document.querySelector(".sender");
+const terminal = document.querySelector(".terminal");
+const ghost = document.querySelector(".ghost");
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+openMessage.addEventListener("click", () => {
+  openMessage.disabled = true;
+  openMessage.textContent = "OPENING...";
 
-body {
-  min-height: 100vh;
-  background: #05020a;
-  color: #ffffff;
-  font-family: 'Space Mono', monospace;
-  overflow: hidden;
-}
+  setTimeout(() => {
+    message.textContent = "Seen.";
+    sender.textContent = "MESSAGE STATUS";
+    openMessage.style.display = "none";
+  }, 900);
 
-.entry-screen {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at center, rgba(126, 45, 255, 0.16), transparent 45%),
-    #05020a;
-}
+  setTimeout(() => {
+    message.textContent = "Ghostping is typing...";
+    sender.textContent = "GHOSTPING";
+  }, 1900);
 
-.entry-screen::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.08;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 3px,
-      #ffffff 4px
-    );
-}
+  setTimeout(() => {
+    message.textContent = "Ghostping stopped typing.";
+  }, 4000);
 
-.ghost {
-  font-size: 76px;
-  margin-bottom: 22px;
-  animation: float 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 22px rgba(170, 80, 255, 0.8));
-}
+  setTimeout(() => {
+    terminal.innerHTML = `
+      <p>CONNECTION: <span>LOST</span></p>
+      <p>REPLY STATUS: <span>NONE</span></p>
+    `;
 
-.system-label {
-  font-size: 14px;
-  letter-spacing: 5px;
-  color: #b77cff;
-  margin-bottom: 24px;
-}
+    messageBox.innerHTML = `
+      <p class="sender">FINAL STATUS</p>
+      <p class="message">YOU'VE BEEN GHOSTED. 👻</p>
+    `;
 
-.terminal {
-  width: min(420px, 100%);
-  padding: 18px;
-  border: 1px solid rgba(183, 124, 255, 0.25);
-  background: rgba(255, 255, 255, 0.025);
-  font-size: 12px;
-  line-height: 1.9;
-  color: #85808f;
-  margin-bottom: 18px;
-}
+    ghost.textContent = "👻";
+    ghost.style.animation = "float 1s ease-in-out infinite";
 
-.terminal span {
-  color: #b77cff;
-}
+  }, 5200);
 
-.message-box {
-  width: min(420px, 100%);
-  padding: 22px;
-  border-left: 2px solid #b77cff;
-  background: rgba(183, 124, 255, 0.06);
-  margin-bottom: 24px;
-}
+  setTimeout(() => {
+    const enterButton = document.createElement("button");
 
-.sender {
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #77717f;
-  margin-bottom: 10px;
-}
+    enterButton.textContent = "ENTER THE GHOST ZONE →";
+    enterButton.id = "enterGhostZone";
 
-.message {
-  font-size: 20px;
-  font-weight: 700;
-}
+    enterButton.addEventListener("click", () => {
+      document.body.innerHTML = `
+        <main style="
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          padding:24px;
+          background:#05020a;
+          color:white;
+          font-family:'Space Mono',monospace;
+          text-align:center;
+        ">
+          <div>
+            <div style="font-size:70px;margin-bottom:20px;">👻</div>
+            <p style="
+              color:#b77cff;
+              letter-spacing:4px;
+              font-size:12px;
+              margin-bottom:20px;
+            ">
+              GHOSTPING.EXE
+            </p>
+            <h1 style="font-size:32px;margin-bottom:14px;">
+              WELCOME TO THE GHOST ZONE
+            </h1>
+            <p style="color:#85808f;">
+              Something is loading...
+            </p>
+          </div>
+        </main>
+      `;
+    });
 
-button {
-  border: 1px solid #b77cff;
-  background: transparent;
-  color: #ffffff;
-  padding: 15px 24px;
-  font-family: inherit;
-  font-size: 12px;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-button:hover {
-  background: #b77cff;
-  color: #05020a;
-  box-shadow: 0 0 30px rgba(183, 124, 255, 0.45);
-  transform: translateY(-2px);
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-@media (max-width: 500px) {
-  .ghost {
-    font-size: 64px;
-  }
-
-  .system-label {
-    font-size: 12px;
-    letter-spacing: 4px;
-  }
-
-  .message {
-    font-size: 18px;
-  }
-}
+    openMessage.parentElement.appendChild(enterButton);
+  }, 5700);
+});
