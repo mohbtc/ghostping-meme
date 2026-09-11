@@ -1,445 +1,157 @@
-/* =========================
-   MAIN ELEMENTS
-========================= */
-
-const entry = document.getElementById("entry");
-const messageScreen = document.getElementById("messageScreen");
-const zoneScreen = document.getElementById("zoneScreen");
-const voidScreen = document.getElementById("voidScreen");
-
-const openMessage = document.getElementById("openMessage");
-const ignoreMessage = document.getElementById("ignoreMessage");
-
-const messageBox = document.querySelector(".message-box");
-const message = document.querySelector(".message");
-const sender = document.querySelector(".sender");
-const terminal = document.querySelector(".terminal");
-const ghost = document.querySelector(".ghost");
-
-const chat = document.getElementById("chat");
-const ghosted = document.getElementById("ghosted");
-const enterZone = document.getElementById("enterZone");
-
-const statusCard = document.getElementById("statusCard");
-const talkCard = document.getElementById("talkCard");
-const loreCard = document.getElementById("loreCard");
-const voidCard = document.getElementById("voidCard");
-
-const backFromVoid = document.getElementById("backFromVoid");
-
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modalTitle");
-const modalText = document.getElementById("modalText");
-const closeModal = document.getElementById("closeModal");
-
-const notification = document.getElementById("notification");
-const notificationText = document.getElementById("notificationText");
-
-
-/* =========================
-   SCREEN SWITCHING
-========================= */
-
-function showScreen(screen) {
-
-  entry.style.display = "none";
-
-  messageScreen.classList.remove("active");
-  zoneScreen.classList.remove("active");
-  voidScreen.classList.remove("active");
-
-  if (screen === entry) {
-    entry.style.display = "flex";
-  }
-
-  if (screen === messageScreen) {
-    messageScreen.classList.add("active");
-  }
-
-  if (screen === zoneScreen) {
-    zoneScreen.classList.add("active");
-  }
-
-  if (screen === voidScreen) {
-    voidScreen.classList.add("active");
-  }
-
-  window.scrollTo({
-    top: 0,
-    behavior: "instant"
-  });
-}
-
-
-/* =========================
-   OPEN MESSAGE
-========================= */
-
-openMessage.addEventListener("click", () => {
-
-  openMessage.disabled = true;
-  openMessage.textContent = "OPENING...";
-
-
-  /* First change */
-
-  setTimeout(() => {
-
-    message.textContent = "Seen.";
-
-    sender.textContent = "MESSAGE STATUS";
-
-    openMessage.style.display = "none";
-
-  }, 900);
-
-
-  /* Ghostping starts typing */
-
-  setTimeout(() => {
-
-    message.textContent =
-      "Ghostping is typing...";
-
-    sender.textContent =
-      "GHOSTPING";
-
-  }, 1900);
-
-
-  /* Stops typing */
-
-  setTimeout(() => {
-
-    message.textContent =
-      "Ghostping stopped typing.";
-
-  }, 4000);
-
-
-  /* Final ghosted state */
-
-  setTimeout(() => {
-
-    terminal.innerHTML = `
-      <p>
-        CONNECTION:
-        <span class="red">LOST</span>
-      </p>
-
-      <p>
-        REPLY STATUS:
-        <span class="red">NONE</span>
-      </p>
-    `;
-
-
-    messageBox.innerHTML = `
-      <p class="sender">
-        FINAL STATUS
-      </p>
-
-      <p class="message">
-        YOU'VE BEEN GHOSTED. 👻
-      </p>
-    `;
-
-
-    ghost.textContent = "👻";
-
-    ghost.style.animation =
-      "ghostFloat 1s ease-in-out infinite";
-
-
-  }, 5200);
-
-
-  /* Show Ghost Zone button */
-
-  setTimeout(() => {
-
-    enterZone.style.display = "block";
-
-  }, 5700);
-
-});
-
-
-/* =========================
-   ENTER GHOST ZONE
-========================= */
-
-enterZone.addEventListener("click", () => {
-
-  showScreen(zoneScreen);
-
-});
-
-
-/* =========================
-   IGNORE BUTTON
-========================= */
-
-ignoreMessage.addEventListener("click", () => {
-
-  notify(
-    "you really thought ignoring it would work."
-  );
-
-
-  setTimeout(() => {
-
-    notify(
-      "Ghostping saw that."
-    );
-
-  }, 3500);
-
-});
-
-
-/* =========================
-   MODAL
-========================= */
-
-function openModal(title, text) {
-
-  modalTitle.textContent = title;
-
-  modalText.textContent = text;
-
-  modal.classList.add("active");
-
-}
-
-
-function closeTheModal() {
-
-  modal.classList.remove("active");
-
-}
-
-
-closeModal.addEventListener(
-  "click",
-  closeTheModal
-);
-
-
-modal.addEventListener("click", (event) => {
-
-  if (event.target === modal) {
-
-    closeTheModal();
-
-  }
-
-});
-
-
-/* =========================
-   CHECK YOUR STATUS
-========================= */
-
-statusCard.addEventListener("click", () => {
-
-  openModal(
-    "YOUR STATUS",
-    "Signal detected.\n\nAttention span: 3%.\nGhost tolerance: 87%.\nChance of receiving a reply: statistically embarrassing."
-  );
-
-});
-
-
-/* =========================
-   TALK TO GHOSTPING
-========================= */
-
-talkCard.addEventListener("click", () => {
-
-  openModal(
-    "TRANSMISSION",
-    "You: hello?\n\nGhostping: typing...\n\nGhostping: typing...\n\nGhostping: stopped typing.\n\nYou have been ghosted."
-  );
-
-});
-
-
-/* =========================
-   CLASSIFIED FILE
-========================= */
-
-loreCard.addEventListener("click", () => {
-
-  openModal(
-    "FILE 00.404",
-    "Ghostping was never built to reply.\n\nIt was built to appear, disappear, and leave you questioning whether the message ever existed."
-  );
-
-});
-
-
-/* =========================
-   ENTER THE VOID
-========================= */
-
-voidCard.addEventListener("click", () => {
-
-  showScreen(voidScreen);
-
-});
-
-
-/* =========================
-   GO BACK FROM VOID
-========================= */
-
-backFromVoid.addEventListener("click", () => {
-
-  showScreen(zoneScreen);
-
-});
-
-
-/* =========================
-   NOTIFICATIONS
-========================= */
-
-function notify(text) {
-
-  notificationText.textContent = text;
-
-  notification.classList.add("show");
-
-
-  setTimeout(() => {
-
-    notification.classList.remove("show");
-
-  }, 3500);
-
-}
-
-
-/* =========================
-   GHOST SECRET CLICKS
-========================= */
-
-let ghostClicks = 0;
-
-
-ghost.addEventListener("click", () => {
-
-  ghostClicks++;
-
-
-  if (ghostClicks === 1) {
-
-    notify(
-      "don't touch that."
-    );
-
-  }
-
-
-  if (ghostClicks === 3) {
-
-    notify(
-      "seriously?"
-    );
-
-  }
-
-
-  if (ghostClicks === 5) {
-
-    notify(
-      "the ghost is getting annoyed."
-    );
-
-  }
-
-
-  if (ghostClicks === 7) {
-
-    openModal(
-      "YOU FOUND IT",
-      "You clicked the ghost seven times.\n\nThere is absolutely nothing here.\n\nUnless there is."
-    );
-
-    ghostClicks = 0;
-
-  }
-
-});
-
-
-/* =========================
-   RANDOM SYSTEM MESSAGES
-========================= */
-
-const randomMessages = [
-
-  "someone is watching this page.",
-
-  "reply server still dead.",
-
-  "ghost detected nearby.",
-
-  "you've been here for too long.",
-
-  "connection is pretending to be stable.",
-
-  "Ghostping knows you're still here.",
-
-  "message delivery failed successfully."
-
+const yesButton = document.getElementById("yesButton");
+const noButton = document.getElementById("noButton");
+const choiceArea = document.getElementById("choiceArea");
+const messageArea = document.getElementById("messageArea");
+const chatMessage = document.getElementById("chatMessage");
+const typing = document.getElementById("typing");
+const finalArea = document.getElementById("finalArea");
+const enterButton = document.getElementById("enterButton");
+let noClicks = 0;
+const noMessages = [
+  "that's crazy.",
+  "you sure?",
+  "interesting choice.",
+  "bro really said no 💀",
+  "okay then.",
+  "we'll see about that."
 ];
-
-
-setInterval(() => {
-
-  const randomMessage =
-    randomMessages[
-      Math.floor(
-        Math.random() *
-        randomMessages.length
-      )
-    ];
-
-
-  notify(randomMessage);
-
-}, 9000);
-
-
-/* =========================
-   REFRESH JOKE
-========================= */
-
-window.addEventListener(
-  "beforeunload",
-  () => {
-
-    console.log(
-      "%cWHY ARE YOU REFRESHING?",
-      "font-size:20px;color:#8d35ff;font-weight:bold;"
-    );
-
+/* NO BUTTON: IT DOES NOT WANT TO BE CLICKED */
+noButton.addEventListener("click", () => {
+  noClicks++;
+  noButton.textContent =
+    noMessages[Math.min(noClicks - 1, noMessages.length - 1)];
+  const maxX = Math.min(100, window.innerWidth / 3);
+  const maxY = 70;
+  const randomX = (Math.random() * maxX * 2) - maxX;
+  const randomY = (Math.random() * maxY * 2) - maxY;
+  noButton.style.transform =
+    `translate(${randomX}px, ${randomY}px)`;
+  if (noClicks >= 4) {
+    noButton.textContent = "FINE 😭";
   }
-);
-
-
-/* =========================
-   DEVTOOLS JOKE
-========================= */
-
-console.log(
-  "%c👻 GHOSTPING NETWORK",
-  "font-size:24px;font-weight:bold;color:#8d35ff;"
-);
-
-console.log(
-  "%cYou weren't supposed to look in here.",
-  "font-size:13px;color:#aaa;"
-);
+});
+/* YES BUTTON: START THE GHOSTING */
+yesButton.addEventListener("click", () => {
+  yesButton.disabled = true;
+  noButton.style.display = "none";
+  yesButton.textContent = "CONNECTING...";
+  setTimeout(() => {
+    choiceArea.classList.add("hidden");
+    messageArea.classList.remove("hidden");
+    chatMessage.textContent = "hey, you there?";
+    yesButton.textContent = "YES, LET ME SEE";
+  }, 700);
+  setTimeout(() => {
+    chatMessage.textContent = "Seen.";
+    typing.classList.add("hidden");
+  }, 1900);
+  setTimeout(() => {
+    chatMessage.textContent = "Ghostping is typing...";
+    typing.classList.remove("hidden");
+  }, 2900);
+  setTimeout(() => {
+    chatMessage.textContent = "Ghostping stopped typing.";
+    typing.classList.add("hidden");
+  }, 4800);
+  setTimeout(() => {
+    chatMessage.textContent = "Ghostping is typing...";
+    typing.classList.remove("hidden");
+  }, 5900);
+  setTimeout(() => {
+    chatMessage.textContent = "...";
+    typing.classList.add("hidden");
+  }, 7200);
+  setTimeout(() => {
+    messageArea.classList.add("hidden");
+    finalArea.classList.remove("hidden");
+    document.body.classList.add("glitching");
+    setTimeout(() => {
+      document.body.classList.remove("glitching");
+    }, 600);
+  }, 7900);
+});
+/* ENTER THE GHOST ZONE */
+enterButton.addEventListener("click", () => {
+  document.body.innerHTML = `
+    <div class="noise"></div>
+    <main style="
+      min-height:100vh;
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      text-align:center;
+      padding:30px;
+      background:
+        radial-gradient(circle at center, rgba(126,34,206,.2), transparent 35%),
+        #050208;
+      color:#f8f4ff;
+      font-family:'Space Mono',monospace;
+    ">
+      <div style="
+        font-size:80px;
+        margin-bottom:25px;
+        filter:drop-shadow(0 0 25px rgba(168,85,247,.8));
+        animation:ghostFloat 3s ease-in-out infinite;
+      ">
+        👻
+      </div>
+      <p style="
+        color:#c084fc;
+        font-size:9px;
+        letter-spacing:4px;
+        margin-bottom:18px;
+      ">
+        GHOSTPING.EXE
+      </p>
+      <h1 style="
+        font-family:Arial,sans-serif;
+        font-size:clamp(34px,9vw,70px);
+        line-height:1;
+        margin-bottom:18px;
+      ">
+        WELCOME TO<br>
+        THE GHOST ZONE
+      </h1>
+      <p style="
+        color:#756b7d;
+        font-size:10px;
+        max-width:320px;
+        line-height:1.8;
+      ">
+        something is loading...
+        <br>
+        probably.
+      </p>
+      <p style="
+        margin-top:35px;
+        color:#403946;
+        font-size:7px;
+        letter-spacing:2px;
+      ">
+        STATUS: YOU SHOULD NOT BE HERE
+      </p>
+    </main>
+  `;
+  /* Add the animation because the page was rebuilt dynamically */
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes ghostFloat {
+      0%,100% { transform:translateY(0) rotate(-2deg); }
+      50% { transform:translateY(-12px) rotate(2deg); }
+    }
+  `;
+  document.head.appendChild(style);
+});
+/* RANDOM SYSTEM GLITCH */
+setInterval(() => {
+  if (Math.random() > 0.75) {
+    const body = document.body;
+    body.style.transform =
+      `translateX(${Math.random() * 4 - 2}px)`;
+    setTimeout(() => {
+      body.style.transform = "translateX(0)";
+    }, 80);
+  }
+}, 3500);
