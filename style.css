@@ -1,137 +1,1033 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  min-height: 100vh;
-  background: #05020a;
+  background: #050308;
   color: #ffffff;
-  font-family: 'Space Mono', monospace;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+button {
+  font: inherit;
+}
+
+
+/* =========================
+   GLOBAL SCREEN
+========================= */
+
+.screen {
+  min-height: 100vh;
+  position: relative;
   overflow: hidden;
 }
 
+.screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 35px 35px;
+
+  pointer-events: none;
+}
+
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(255, 255, 255, 0.018) 4px
+  );
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   ENTRY SCREEN
+========================= */
+
 .entry-screen {
   min-height: 100vh;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+
+  padding: 90px 20px 80px;
+
   position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at center, rgba(126, 45, 255, 0.16), transparent 45%),
-    #05020a;
+  z-index: 2;
 }
 
-.entry-screen::before {
-  content: "";
+
+/* =========================
+   TOP HUD
+========================= */
+
+.top-hud {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.08;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 3px,
-      #ffffff 4px
+
+  top: 20px;
+  left: 20px;
+  right: 20px;
+
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 10px;
+  letter-spacing: 2px;
+
+  color: #777777;
+  text-transform: uppercase;
+}
+
+.top-hud .online {
+  color: #b8ff65;
+}
+
+
+/* =========================
+   GHOST STAGE
+========================= */
+
+.ghost-stage {
+  position: relative;
+
+  width: 210px;
+  height: 230px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 5px;
+}
+
+
+/* =========================
+   STRUCTURED FLAME
+========================= */
+
+.ghost-flame {
+  position: absolute;
+
+  width: 115px;
+  height: 175px;
+
+  bottom: 20px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 1;
+
+  filter:
+    drop-shadow(
+      0 0 20px rgba(141, 53, 255, 0.75)
     );
 }
 
+
+/* Outer flame */
+
+.ghost-flame::before {
+  content: "";
+
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  left: 0;
+  top: 0;
+
+  background: #8d35ff;
+
+  clip-path: polygon(
+    50% 100%,
+    20% 83%,
+    8% 60%,
+    20% 68%,
+    17% 38%,
+    35% 52%,
+    34% 19%,
+    49% 42%,
+    61% 5%,
+    68% 39%,
+    86% 22%,
+    80% 51%,
+    96% 43%,
+    88% 72%,
+    75% 87%
+  );
+}
+
+
+/* Inner flame */
+
+.ghost-flame::after {
+  content: "";
+
+  position: absolute;
+
+  width: 48px;
+  height: 90px;
+
+  left: 34px;
+  bottom: 12px;
+
+  background: #dca7ff;
+
+  clip-path: polygon(
+    50% 100%,
+    20% 76%,
+    27% 49%,
+    42% 62%,
+    43% 25%,
+    59% 48%,
+    68% 0%,
+    73% 48%,
+    88% 38%,
+    78% 74%
+  );
+
+  filter:
+    drop-shadow(
+      0 0 8px rgba(220, 167, 255, 0.8)
+    );
+}
+
+
+/* =========================
+   GHOST
+========================= */
+
 .ghost {
-  font-size: 76px;
-  margin-bottom: 22px;
-  animation: float 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 22px rgba(170, 80, 255, 0.8));
-}
+  position: relative;
 
-.system-label {
-  font-size: 14px;
-  letter-spacing: 5px;
-  color: #b77cff;
-  margin-bottom: 24px;
-}
+  z-index: 3;
 
-.terminal {
-  width: min(420px, 100%);
-  padding: 18px;
-  border: 1px solid rgba(183, 124, 255, 0.25);
-  background: rgba(255, 255, 255, 0.025);
-  font-size: 12px;
-  line-height: 1.9;
-  color: #85808f;
-  margin-bottom: 18px;
-}
+  font-size: 125px;
+  line-height: 1;
 
-.terminal span {
-  color: #b77cff;
-}
-
-.message-box {
-  width: min(420px, 100%);
-  padding: 22px;
-  border-left: 2px solid #b77cff;
-  background: rgba(183, 124, 255, 0.06);
-  margin-bottom: 24px;
-}
-
-.sender {
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #77717f;
-  margin-bottom: 10px;
-}
-
-.message {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-button {
-  border: 1px solid #b77cff;
-  background: transparent;
-  color: #ffffff;
-  padding: 15px 24px;
-  font-family: inherit;
-  font-size: 12px;
-  letter-spacing: 2px;
+  user-select: none;
   cursor: pointer;
-  transition: 0.25s ease;
+
+  filter:
+    drop-shadow(
+      0 0 8px rgba(255, 255, 255, 0.7)
+    )
+    drop-shadow(
+      0 0 24px rgba(143, 55, 255, 0.7)
+    );
+
+  animation:
+    ghostFloat 3s ease-in-out infinite;
 }
 
-button:hover {
-  background: #b77cff;
-  color: #05020a;
-  box-shadow: 0 0 30px rgba(183, 124, 255, 0.45);
-  transform: translateY(-2px);
-}
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
+@keyframes ghostFloat {
+
+  0%,
+  100% {
+    transform:
+      translateY(0)
+      rotate(-1deg);
   }
 
   50% {
-    transform: translateY(-12px);
+    transform:
+      translateY(-10px)
+      rotate(1deg);
   }
+
 }
 
-@media (max-width: 500px) {
+
+.ghost:hover {
+  animation: ghostGlitch 0.35s infinite;
+}
+
+
+@keyframes ghostGlitch {
+
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform:
+      translate(-4px, 2px)
+      rotate(-3deg);
+  }
+
+  50% {
+    transform:
+      translate(4px, -2px)
+      rotate(3deg);
+  }
+
+  75% {
+    transform:
+      translate(-2px, -3px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+
+}
+
+
+/* =========================
+   MAIN TITLE
+========================= */
+
+.system-label {
+  color: #a35cff;
+
+  font-size: 11px;
+
+  letter-spacing: 5px;
+
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+
+.main-title {
+  font-size: clamp(58px, 17vw, 125px);
+
+  font-weight: 900;
+
+  line-height: 0.82;
+
+  letter-spacing: -6px;
+
+  text-align: center;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    3px 0 #8d35ff,
+    -2px 0 rgba(255, 255, 255, 0.15);
+}
+
+
+.subtitle {
+  color: #777777;
+
+  margin-top: 18px;
+
+  font-size: 12px;
+
+  letter-spacing: 2px;
+
+  text-align: center;
+}
+
+
+/* =========================
+   TERMINAL
+========================= */
+
+.terminal {
+  width: min(430px, 100%);
+
+  margin-top: 28px;
+
+  padding: 17px;
+
+  border: 1px solid #29202f;
+
+  background: rgba(12, 7, 17, 0.8);
+
+  font-family: monospace;
+
+  font-size: 11px;
+
+  line-height: 1.8;
+
+  color: #777777;
+}
+
+.green {
+  color: #b8ff65;
+}
+
+.purple {
+  color: #b66cff;
+}
+
+.red {
+  color: #ff526d;
+}
+
+
+/* =========================
+   MESSAGE BOX
+========================= */
+
+.message-box {
+  width: min(430px, 100%);
+
+  margin-top: 12px;
+
+  padding: 18px;
+
+  border: 1px solid #382344;
+
+  background: #0d0812;
+}
+
+
+.sender {
+  color: #8d35ff;
+
+  font-size: 9px;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 10px;
+}
+
+
+.message {
+  font-family: monospace;
+
+  font-size: 15px;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.button-row {
+  display: flex;
+
+  gap: 10px;
+
+  width: min(430px, 100%);
+
+  margin-top: 15px;
+}
+
+
+.action-btn {
+  flex: 1;
+
+  padding: 15px 10px;
+
+  background: #8d35ff;
+
+  color: #ffffff;
+
+  border: none;
+
+  cursor: pointer;
+
+  font-size: 11px;
+
+  font-weight: bold;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+
+.action-btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 0 25px rgba(141, 53, 255, 0.5);
+}
+
+
+.action-btn.secondary {
+  background: transparent;
+
+  border: 1px solid #302438;
+
+  color: #777777;
+}
+
+
+/* =========================
+   BOTTOM HUD
+========================= */
+
+.bottom-hud {
+  position: absolute;
+
+  bottom: 20px;
+
+  left: 20px;
+  right: 20px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  color: #4d4652;
+
+  font-size: 9px;
+
+  letter-spacing: 2px;
+}
+
+
+/* =========================
+   MESSAGE SCREEN
+========================= */
+
+.message-screen {
+  min-height: 100vh;
+
+  display: none;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 80px 20px;
+
+  position: relative;
+
+  z-index: 3;
+}
+
+
+.message-screen.active {
+  display: flex;
+}
+
+
+.transmission {
+  width: min(600px, 100%);
+}
+
+
+.transmission-label {
+  color: #8d35ff;
+
+  font-family: monospace;
+
+  font-size: 11px;
+
+  letter-spacing: 3px;
+
+  margin-bottom: 25px;
+}
+
+
+.chat-line {
+  border-left: 2px solid #8d35ff;
+
+  padding: 15px 20px;
+
+  margin-bottom: 12px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  font-family: monospace;
+}
+
+
+.typing {
+  color: #777777;
+
+  font-size: 12px;
+}
+
+
+.ghosted {
+  color: #ff526d;
+
+  font-size: clamp(40px, 12vw, 80px);
+
+  font-weight: 900;
+
+  margin-top: 30px;
+}
+
+
+.enter-zone {
+  display: none;
+
+  margin-top: 35px;
+}
+
+
+/* =========================
+   GHOST ZONE
+========================= */
+
+.zone-screen {
+  min-height: 100vh;
+
+  display: none;
+
+  padding: 80px 20px;
+
+  position: relative;
+
+  z-index: 3;
+}
+
+
+.zone-screen.active {
+  display: block;
+}
+
+
+.zone-wrap {
+  max-width: 950px;
+
+  margin: auto;
+}
+
+
+.zone-header {
+  margin-bottom: 50px;
+}
+
+
+.zone-small {
+  color: #8d35ff;
+
+  font-family: monospace;
+
+  font-size: 10px;
+
+  letter-spacing: 3px;
+}
+
+
+.zone-title {
+  font-size: clamp(55px, 13vw, 120px);
+
+  font-weight: 900;
+
+  letter-spacing: -5px;
+
+  line-height: 0.85;
+
+  margin-top: 15px;
+}
+
+
+.zone-meta {
+  margin-top: 20px;
+
+  display: flex;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+
+  font-family: monospace;
+
+  font-size: 10px;
+
+  color: #666666;
+}
+
+
+.cards {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 15px;
+}
+
+
+.zone-card {
+  min-height: 190px;
+
+  padding: 25px;
+
+  border: 1px solid #2c2034;
+
+  background: #0b070f;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s,
+    border-color 0.25s;
+}
+
+
+.zone-card:hover {
+  border-color: #8d35ff;
+
+  transform: translateY(-5px);
+}
+
+
+.card-number {
+  color: #8d35ff;
+
+  font-family: monospace;
+
+  font-size: 10px;
+
+  margin-bottom: 30px;
+}
+
+
+.zone-card h3 {
+  font-size: 20px;
+
+  margin-bottom: 15px;
+}
+
+
+.zone-card p {
+  color: #777777;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================
+   VOID / LAST PAGE
+========================= */
+
+.void-screen {
+  min-height: 100vh;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  position: relative;
+
+  z-index: 4;
+
+  padding: 80px 20px;
+}
+
+
+.void-screen.active {
+  display: flex;
+}
+
+
+.void-content {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.void-text {
+  font-size: clamp(40px, 12vw, 100px);
+
+  font-weight: 900;
+
+  letter-spacing: -5px;
+
+  line-height: 0.85;
+
+  margin-bottom: 60px;
+}
+
+
+.cursor {
+  display: inline-block;
+
+  width: 10px;
+
+  height: 1em;
+
+  background: #8d35ff;
+
+  vertical-align: bottom;
+
+  animation: blink 0.8s infinite;
+}
+
+
+@keyframes blink {
+
+  50% {
+    opacity: 0;
+  }
+
+}
+
+
+.back-button {
+  flex: none;
+
+  width: min(250px, 100%);
+
+  margin: 0;
+
+  display: block;
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.82);
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 20;
+}
+
+
+.modal.active {
+  display: flex;
+}
+
+
+.modal-box {
+  width: min(500px, 100%);
+
+  border: 1px solid #8d35ff;
+
+  background: #09050d;
+
+  padding: 30px;
+
+  box-shadow:
+    0 0 50px rgba(141, 53, 255, 0.2);
+}
+
+
+.modal-label {
+  color: #8d35ff;
+
+  font-family: monospace;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 20px;
+}
+
+
+.modal-box h2 {
+  font-size: 35px;
+
+  margin-bottom: 15px;
+}
+
+
+.modal-box p {
+  color: #999999;
+
+  line-height: 1.7;
+
+  font-size: 13px;
+
+  white-space: pre-line;
+}
+
+
+.close-modal {
+  margin-top: 25px;
+
+  background: transparent;
+
+  border: 1px solid #3b2b44;
+
+  color: #aaaaaa;
+
+  padding: 12px 20px;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+.notification {
+  position: fixed;
+
+  right: 18px;
+
+  bottom: 18px;
+
+  width: min(310px, calc(100% - 36px));
+
+  padding: 15px;
+
+  border: 1px solid #40264f;
+
+  background: #0c0710;
+
+  font-family: monospace;
+
+  font-size: 11px;
+
+  z-index: 30;
+
+  transform: translateY(150px);
+
+  transition: transform 0.4s;
+}
+
+
+.notification.show {
+  transform: translateY(0);
+}
+
+
+.notification strong {
+  color: #8d35ff;
+
+  display: block;
+
+  margin-bottom: 6px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+  .entry-screen {
+    padding-top: 90px;
+    padding-bottom: 80px;
+  }
+
+
+  .ghost-stage {
+    width: 180px;
+    height: 200px;
+  }
+
+
   .ghost {
-    font-size: 64px;
+    font-size: 105px;
   }
 
-  .system-label {
-    font-size: 12px;
-    letter-spacing: 4px;
+
+  .ghost-flame {
+    width: 100px;
+    height: 150px;
   }
 
-  .message {
-    font-size: 18px;
+
+  .main-title {
+    letter-spacing: -4px;
   }
+
+
+  .button-row {
+    flex-direction: column;
+  }
+
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+
+  .zone-card {
+    min-height: 160px;
+  }
+
+
+  .zone-title {
+    letter-spacing: -4px;
+  }
+
+
+  .void-screen {
+    padding: 80px 20px;
+  }
+
+
+  .void-text {
+    margin-bottom: 55px;
+  }
+
+
+  .top-hud,
+  .bottom-hud {
+    font-size: 8px;
+  }
+
+
+  .bottom-hud {
+    gap: 10px;
+  }
+
+
+  .notification {
+    right: 12px;
+    bottom: 12px;
+    width: calc(100% - 24px);
+  }
+
 }
