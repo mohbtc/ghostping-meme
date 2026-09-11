@@ -4,294 +4,113 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Ghostping 👻</title>
+  <title>GHOSTPING.EXE 👻</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- =========================
-       ENTRY SCREEN
-  ========================== -->
+  <div class="noise"></div>
 
-  <main id="entry" class="screen entry-screen">
+  <div class="hud hud-top">
+    <span>GHOSTPING NETWORK</span>
+    <span>NODE_404</span>
+    <span class="status-dot">● ONLINE</span>
+  </div>
 
-    <div class="top-hud">
-      <span>GHOSTPING NETWORK</span>
-      <span>NODE_404</span>
-      <span class="online">ONLINE</span>
+  <div class="hud hud-bottom">
+    <span>REPLY SERVER: <b>DEAD</b></span>
+    <span>SIGNAL: <b>UNSTABLE</b></span>
+  </div>
+
+  <div class="popup popup-one">
+    <span>👻</span>
+    <div>
+      <small>GHOSTPING</small>
+      <p>someone is typing...</p>
+    </div>
+  </div>
+
+  <div class="popup popup-two">
+    <span>⚠</span>
+    <div>
+      <small>SYSTEM</small>
+      <p>reply not found</p>
+    </div>
+  </div>
+
+  <main class="entry">
+
+    <div class="ghost-orbit">
+      <div class="orbit orbit-one"></div>
+      <div class="orbit orbit-two"></div>
+      <div class="ghost">👻</div>
     </div>
 
-    <div class="ghost-stage">
+    <p class="eyebrow">GHOSTPING.EXE // CONNECTION REQUEST</p>
 
-      <div class="ghost-flame"></div>
+    <h1>
+      YOU<br>
+      <span>UP?</span>
+    </h1>
 
-      <div class="ghost" id="ghost">👻</div>
-
-    </div>
-
-    <p class="system-label">GHOSTPING.EXE</p>
-
-    <h1 class="main-title">YOU UP?</h1>
-
-    <p class="subtitle">
-      something found its way into your device.
+    <p class="intro">
+      ghostping.exe wants to send you a message.
     </p>
 
-    <div class="terminal">
+    <div class="choice-area" id="choiceArea">
 
-      <div>
-        CONNECTION:
-        <span class="green">ESTABLISHED</span>
-      </div>
+      <button class="choice yes" id="yesButton">
+        YES, LET ME SEE
+      </button>
 
-      <div>
-        SIGNAL:
-        <span class="purple">UNSTABLE</span>
-      </div>
-
-      <div>
-        REPLY SERVER:
-        <span class="red">DEAD</span>
-      </div>
-
-      <div>
-        UNKNOWN USER:
-        <span class="purple">DETECTED</span>
-      </div>
+      <button class="choice no" id="noButton">
+        NOPE
+      </button>
 
     </div>
 
-    <div class="message-box">
+    <div class="message-area hidden" id="messageArea">
 
-      <p class="sender">UNKNOWN SENDER</p>
+      <div class="chat-meta">
+        <span>UNKNOWN SENDER</span>
+        <span id="messageTime">NOW</span>
+      </div>
 
-      <p class="message">
+      <div class="chat-message" id="chatMessage">
         hey, you there?
-      </p>
+      </div>
+
+      <div class="typing" id="typing">
+        <span></span>
+        <span></span>
+        <span></span>
+        <em>Ghostping is typing...</em>
+      </div>
 
     </div>
 
-    <div class="button-row">
+    <div class="final-area hidden" id="finalArea">
 
-      <button id="openMessage" class="action-btn">
-        OPEN MESSAGE
-      </button>
+      <div class="glitch-text" data-text="GHOSTED.">
+        GHOSTED.
+      </div>
 
-      <button id="ignoreMessage" class="action-btn secondary">
-        IGNORE
-      </button>
+      <p>yeah, we do that here.</p>
 
-    </div>
-
-    <div class="bottom-hud">
-      <span>DON'T BLINK</span>
-      <span>GHOSTPING // v0.0.404</span>
-    </div>
-
-  </main>
-
-
-  <!-- =========================
-       MESSAGE SCREEN
-  ========================== -->
-
-  <section id="messageScreen" class="screen message-screen">
-
-    <div class="transmission">
-
-      <p class="transmission-label">
-        INCOMING TRANSMISSION // UNKNOWN
-      </p>
-
-      <div id="chat"></div>
-
-      <div id="ghosted" class="ghosted"></div>
-
-      <button
-        id="enterZone"
-        class="action-btn enter-zone">
+      <button class="enter-button" id="enterButton">
         ENTER THE GHOST ZONE →
       </button>
 
     </div>
 
-  </section>
+  </main>
 
-
-  <!-- =========================
-       GHOST ZONE
-  ========================== -->
-
-  <section id="zoneScreen" class="screen zone-screen">
-
-    <div class="zone-wrap">
-
-      <div class="zone-header">
-
-        <p class="zone-small">
-          LOCATION FOUND // CONNECTION UNSTABLE
-        </p>
-
-        <h2 class="zone-title">
-          THE<br>
-          GHOST ZONE
-        </h2>
-
-        <div class="zone-meta">
-
-          <span>X: 00.404</span>
-          <span>Y: ???</span>
-          <span>STATUS: UNSTABLE</span>
-
-        </div>
-
-      </div>
-
-
-      <div class="cards">
-
-        <div id="statusCard" class="zone-card">
-
-          <div class="card-number">
-            01 // SCAN
-          </div>
-
-          <h3>
-            CHECK YOUR STATUS
-          </h3>
-
-          <p>
-            Find out how badly the internet has already affected you.
-          </p>
-
-        </div>
-
-
-        <div id="talkCard" class="zone-card">
-
-          <div class="card-number">
-            02 // TRANSMIT
-          </div>
-
-          <h3>
-            TALK TO GHOSTPING
-          </h3>
-
-          <p>
-            Send a message. Maybe it will reply. Probably not.
-          </p>
-
-        </div>
-
-
-        <div id="loreCard" class="zone-card">
-
-          <div class="card-number">
-            03 // CLASSIFIED
-          </div>
-
-          <h3>
-            CLASSIFIED FILE
-          </h3>
-
-          <p>
-            There are things about Ghostping you probably shouldn't know.
-          </p>
-
-        </div>
-
-
-        <div id="voidCard" class="zone-card">
-
-          <div class="card-number">
-            04 // WARNING
-          </div>
-
-          <h3>
-            ENTER THE VOID
-          </h3>
-
-          <p>
-            No signal. No message. No explanation.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       VOID / LAST PAGE
-  ========================== -->
-
-  <section id="voidScreen" class="screen void-screen">
-
-    <div class="void-content">
-
-      <div class="void-text">
-
-        YOU<br>
-        FOUND<br>
-        NOTHING<span class="cursor"></span>
-
-      </div>
-
-      <button id="backFromVoid" class="action-btn back-button">
-        ← GO BACK
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       MODAL
-  ========================== -->
-
-  <div id="modal" class="modal">
-
-    <div class="modal-box">
-
-      <div class="modal-label">
-        GHOSTPING // CLASSIFIED
-      </div>
-
-      <h2 id="modalTitle">
-        SYSTEM
-      </h2>
-
-      <p id="modalText"></p>
-
-      <button id="closeModal" class="close-modal">
-        CLOSE FILE
-      </button>
-
-    </div>
-
+  <div class="corner-text">
+    <span>v.0.0.1</span>
+    <span>NO REFUNDS</span>
   </div>
-
-
-  <!-- =========================
-       NOTIFICATION
-  ========================== -->
-
-  <div id="notification" class="notification">
-
-    <strong>
-      GHOSTPING SYSTEM
-    </strong>
-
-    <span id="notificationText"></span>
-
-  </div>
-
 
   <script src="script.js"></script>
 
