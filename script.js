@@ -1,257 +1,247 @@
-/* =========================================
-   GHOSTPING
-   everything is slightly broken on purpose.
-========================================= */
-
-
-/* =========================================
+/* =========================
    ELEMENTS
-========================================= */
+========================= */
 
-const intro = document.getElementById("intro");
+const home = document.getElementById("home");
+const ghosting = document.getElementById("ghosting");
+const zone = document.getElementById("zone");
+const voidPage = document.getElementById("void");
+
 const ghost = document.getElementById("ghost");
 
 const openBtn = document.getElementById("openBtn");
 const ignoreBtn = document.getElementById("ignoreBtn");
 
-const messageSection = document.getElementById("messageSection");
-const giantMessage = document.getElementById("giantMessage");
-const typingArea = document.getElementById("typingArea");
+const messageText = document.getElementById("messageText");
+const typing = document.getElementById("typing");
 const typingText = document.getElementById("typingText");
-const finalMessage = document.getElementById("finalMessage");
+const finalText = document.getElementById("finalText");
 const zoneBtn = document.getElementById("zoneBtn");
 
-const zone = document.getElementById("zone");
-const leaveZone = document.getElementById("leaveZone");
+const exitZone = document.getElementById("exitZone");
 
-const statusCard = document.getElementById("statusCard");
-const talkCard = document.getElementById("talkCard");
-const loreCard = document.getElementById("loreCard");
-const voidCard = document.getElementById("voidCard");
+const statusBtn = document.getElementById("statusBtn");
+const talkBtn = document.getElementById("talkBtn");
+const loreBtn = document.getElementById("loreBtn");
+const voidBtn = document.getElementById("voidBtn");
 
-const voidScreen = document.getElementById("void");
 const backBtn = document.getElementById("backBtn");
-const voidText = document.getElementById("voidText");
+const voidMessage = document.getElementById("voidMessage");
 
 const modal = document.getElementById("modal");
 const modalTitle = document.getElementById("modalTitle");
-const modalBody = document.getElementById("modalBody");
-const modalClose = document.getElementById("modalClose");
+const modalText = document.getElementById("modalText");
+const closeModal = document.getElementById("closeModal");
 
 const toast = document.getElementById("toast");
 const toastText = document.getElementById("toastText");
 
 
-/* =========================================
-   HELPERS
-========================================= */
+/* =========================
+   PAGE SWITCH
+========================= */
 
-function show(element) {
-  element.classList.remove("hidden");
-}
+function page(pageToShow) {
 
-function hide(element) {
-  element.classList.add("hidden");
-}
+  home.classList.remove("active");
+  ghosting.classList.remove("active");
+  zone.classList.remove("active");
+  voidPage.classList.remove("active");
 
-function top() {
+  pageToShow.classList.add("active");
+
   window.scrollTo(0, 0);
 }
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
 
 function notify(text) {
 
   toastText.textContent = text;
 
-  show(toast);
+  toast.classList.add("show");
 
-  clearTimeout(window.toastTimer);
+  clearTimeout(toastTimer);
 
-  window.toastTimer = setTimeout(() => {
-    hide(toast);
-  }, 3300);
+  toastTimer = setTimeout(() => {
+
+    toast.classList.remove("show");
+
+  }, 3200);
 }
+
+
+/* =========================
+   MODAL
+========================= */
 
 function openModal(title, text) {
 
   modalTitle.textContent = title;
-  modalBody.textContent = text;
 
-  show(modal);
+  modalText.textContent = text;
+
+  modal.classList.add("show");
 }
 
-function closeModal() {
-  hide(modal);
+function closeTheModal() {
+
+  modal.classList.remove("show");
+
 }
 
+closeModal.addEventListener("click", closeTheModal);
 
-/* =========================================
-   OPEN THE MESSAGE
-========================================= */
+modal.addEventListener("click", function(event) {
 
-openBtn.addEventListener("click", () => {
+  if (event.target === modal) {
+    closeTheModal();
+  }
+
+});
+
+
+/* =========================
+   OPEN MESSAGE
+========================= */
+
+openBtn.addEventListener("click", function() {
 
   openBtn.disabled = true;
 
-  openBtn.textContent = "WAIT...";
+  openBtn.textContent = "OPENING...";
 
-  setTimeout(() => {
+  setTimeout(function() {
 
-    hide(intro);
+    page(ghosting);
 
-    show(messageSection);
-
-    top();
-
-  }, 700);
+  }, 500);
 
 
-  setTimeout(() => {
+  setTimeout(function() {
 
-    giantMessage.textContent = "Seen.";
+    messageText.textContent = "SEEN.";
 
-    giantMessage.style.transform = "translateX(-4px)";
-
-    setTimeout(() => {
-      giantMessage.style.transform = "translateX(0)";
-    }, 120);
-
-  }, 1200);
+  }, 900);
 
 
-  setTimeout(() => {
+  setTimeout(function() {
+
+    typing.classList.add("show");
 
     typingText.textContent =
       "Ghostping is typing...";
 
-    show(typingArea);
-
-  }, 2200);
+  }, 1800);
 
 
-  setTimeout(() => {
-
-    typingText.textContent =
-      "Ghostping is typing...";
-
-  }, 3400);
-
-
-  setTimeout(() => {
+  setTimeout(function() {
 
     typingText.textContent =
       "Ghostping stopped typing.";
 
-    hide(typingArea);
+    typing.classList.remove("show");
 
-  }, 4300);
+  }, 3800);
 
 
-  setTimeout(() => {
+  setTimeout(function() {
 
-    finalMessage.textContent =
+    finalText.textContent =
       "YOU'VE BEEN GHOSTED. 👻";
 
-  }, 5000);
+  }, 4600);
 
 
-  setTimeout(() => {
+  setTimeout(function() {
 
-    show(zoneBtn);
+    zoneBtn.classList.add("show");
 
-  }, 5700);
+  }, 5200);
 
 });
 
 
-/* =========================================
+/* =========================
    IGNORE
-========================================= */
+========================= */
 
-ignoreBtn.addEventListener("click", () => {
+ignoreBtn.addEventListener("click", function() {
 
-  const messages = [
+  const responses = [
 
-    "bold of you to ignore Ghostping.",
+    "you really pressed ignore.",
 
     "Ghostping saw that.",
 
-    "okay.",
+    "bold move.",
 
-    "you'll regret that.",
+    "okay then.",
 
-    "bro really pressed ignore 😭",
+    "that won't save you.",
 
     "message status: still waiting.",
 
-    "that's not how this works."
+    "bro really ignored Ghostping."
 
   ];
 
-  const random =
-    messages[Math.floor(Math.random() * messages.length)];
+  const response =
+    responses[Math.floor(Math.random() * responses.length)];
 
-  notify(random);
-
-  ignoreBtn.textContent = "too late";
-
-  setTimeout(() => {
-
-    ignoreBtn.textContent = "ignore";
-
-  }, 1800);
+  notify(response);
 
 });
 
 
-/* =========================================
+/* =========================
    GHOST ZONE
-========================================= */
+========================= */
 
-zoneBtn.addEventListener("click", () => {
+zoneBtn.addEventListener("click", function() {
 
-  hide(messageSection);
+  page(zone);
 
-  show(zone);
-
-  top();
-
-  setTimeout(() => {
+  setTimeout(function() {
 
     notify("you actually came in.");
 
-  }, 700);
+  }, 500);
 
 });
 
 
-/* =========================================
-   EXIT ZONE
-========================================= */
+/* =========================
+   EXIT
+========================= */
 
-leaveZone.addEventListener("click", () => {
+exitZone.addEventListener("click", function() {
 
   notify("there is no exit.");
 
-  setTimeout(() => {
+  setTimeout(function() {
 
-    notify("fine. go.");
+    page(home);
 
-    hide(zone);
+    openBtn.disabled = false;
 
-    show(intro);
+    openBtn.textContent = "OPEN MESSAGE";
 
-    top();
-
-  }, 1800);
+  }, 1700);
 
 });
 
 
-/* =========================================
+/* =========================
    STATUS
-========================================= */
+========================= */
 
-statusCard.addEventListener("click", () => {
+statusBtn.addEventListener("click", function() {
 
   openModal(
     "YOUR STATUS",
@@ -261,21 +251,21 @@ ATTENTION SPAN: 4%
 
 GHOST TOLERANCE: 87%
 
-CHANCE OF GETTING A REPLY:
+CHANCE OF RECEIVING A REPLY:
 statistically embarrassing.
 
-OVERALL STATUS:
-you're cooked.`
+FINAL STATUS:
+YOU ARE COOKED.`
   );
 
 });
 
 
-/* =========================================
-   TALK TO GHOSTPING
-========================================= */
+/* =========================
+   TALK
+========================= */
 
-talkCard.addEventListener("click", () => {
+talkBtn.addEventListener("click", function() {
 
   openModal(
     "TRANSMISSION",
@@ -297,28 +287,25 @@ stopped typing.
 YOU:
 ???
 
-CONNECTION:
-somehow still online.
-
 REPLY:
-none.`
+NONE.
+
+CONNECTION:
+somehow still online.`
   );
 
 });
 
 
-/* =========================================
+/* =========================
    LORE
-========================================= */
+========================= */
 
-loreCard.addEventListener("click", () => {
+loreBtn.addEventListener("click", function() {
 
   openModal(
     "FILE 00.404",
-`CLASSIFICATION:
-VERY UNIMPORTANT
-
-Ghostping was never designed
+`Ghostping was never built
 to reply.
 
 It appears.
@@ -327,47 +314,39 @@ It watches.
 
 It disappears.
 
-Some say the ghost has been
-online since the first unread
-message.
-
 Nobody knows why.
 
 Nobody has ever received
 a satisfying explanation.
 
 FILE STATUS:
-still not telling you.`
+CLASSIFIED.`
   );
 
 });
 
 
-/* =========================================
+/* =========================
    VOID
-========================================= */
+========================= */
 
-voidCard.addEventListener("click", () => {
+voidBtn.addEventListener("click", function() {
 
-  hide(zone);
+  page(voidPage);
 
-  show(voidScreen);
-
-  top();
-
-  voidText.textContent =
+  voidMessage.textContent =
     "you were warned.";
 
-  setTimeout(() => {
+  setTimeout(function() {
 
-    voidText.textContent =
+    voidMessage.textContent =
       "seriously, there is nothing here.";
 
   }, 2200);
 
-  setTimeout(() => {
+  setTimeout(function() {
 
-    voidText.textContent =
+    voidMessage.textContent =
       "why are you still looking?";
 
   }, 4800);
@@ -375,22 +354,17 @@ voidCard.addEventListener("click", () => {
 });
 
 
-/* =========================================
+/* =========================
    BACK FROM VOID
-========================================= */
+========================= */
 
-backBtn.addEventListener("click", () => {
+backBtn.addEventListener("click", function() {
 
-  hide(voidScreen);
-
-  show(zone);
-
-  top();
+  page(zone);
 
   notify("good decision.");
 
-
-  setTimeout(() => {
+  setTimeout(function() {
 
     notify("probably.");
 
@@ -399,28 +373,13 @@ backBtn.addEventListener("click", () => {
 });
 
 
-/* =========================================
-   MODAL
-========================================= */
-
-modalClose.addEventListener("click", closeModal);
-
-modal.addEventListener("click", (event) => {
-
-  if (event.target === modal) {
-    closeModal();
-  }
-
-});
-
-
-/* =========================================
-   GHOST CLICK SECRET
-========================================= */
+/* =========================
+   GHOST SECRET
+========================= */
 
 let ghostClicks = 0;
 
-ghost.addEventListener("click", () => {
+ghost.addEventListener("click", function() {
 
   ghostClicks++;
 
@@ -430,15 +389,9 @@ ghost.addEventListener("click", () => {
 
   }
 
-  if (ghostClicks === 2) {
-
-    notify("i'm serious.");
-
-  }
-
   if (ghostClicks === 3) {
 
-    notify("bro.");
+    notify("seriously?");
 
   }
 
@@ -446,19 +399,13 @@ ghost.addEventListener("click", () => {
 
     notify("THE GHOST IS ANGRY.");
 
-    ghost.style.transform = "scale(1.15) rotate(5deg)";
-
-    setTimeout(() => {
-      ghost.style.transform = "";
-    }, 400);
-
   }
 
   if (ghostClicks === 7) {
 
     openModal(
       "SECRET FOUND",
-`you clicked the ghost 7 times.
+`you clicked the ghost seven times.
 
 congratulations.
 
@@ -478,19 +425,19 @@ unless?
 });
 
 
-/* =========================================
-   RANDOM GHOSTPING EVENTS
-========================================= */
+/* =========================
+   RANDOM EVENTS
+========================= */
 
 const randomEvents = [
 
   "someone is typing...",
 
-  "connection unstable.",
-
   "Ghostping is online.",
 
   "Ghostping went offline.",
+
+  "reply server still dead.",
 
   "message failed successfully.",
 
@@ -498,36 +445,34 @@ const randomEvents = [
 
   "the ghost noticed you.",
 
-  "reply server remains dead.",
-
-  "do not refresh.",
+  "connection unstable.",
 
   "why are you still here?"
 
 ];
 
-setInterval(() => {
+setInterval(function() {
 
   if (
-    !intro.classList.contains("hidden") ||
-    !zone.classList.contains("hidden")
+    home.classList.contains("active") ||
+    zone.classList.contains("active")
   ) {
 
-    const event =
+    const random =
       randomEvents[
         Math.floor(Math.random() * randomEvents.length)
       ];
 
-    notify(event);
+    notify(random);
 
   }
 
-}, 11000);
+}, 12000);
 
 
-/* =========================================
-   IDLE DETECTION
-========================================= */
+/* =========================
+   IDLE
+========================= */
 
 let idleTimer;
 
@@ -535,11 +480,11 @@ function resetIdle() {
 
   clearTimeout(idleTimer);
 
-  idleTimer = setTimeout(() => {
+  idleTimer = setTimeout(function() {
 
     notify("you still there?");
 
-    setTimeout(() => {
+    setTimeout(function() {
 
       notify("thought so.");
 
@@ -556,28 +501,9 @@ document.addEventListener("keydown", resetIdle);
 resetIdle();
 
 
-/* =========================================
-   REFRESH JOKE
-========================================= */
-
-window.addEventListener("beforeunload", () => {
-
-  console.log(
-    "%cWHY ARE YOU REFRESHING?",
-    "font-size:22px;font-weight:bold;color:#9d4cff;"
-  );
-
-  console.log(
-    "%cGhostping does not support patience.",
-    "font-size:12px;color:#aaa;"
-  );
-
-});
-
-
-/* =========================================
+/* =========================
    DEVTOOLS
-========================================= */
+========================= */
 
 console.log(
   "%c👻 GHOSTPING",
@@ -585,35 +511,20 @@ console.log(
 );
 
 console.log(
-  "%cYou found the developer dimension.",
+  "%cYou weren't supposed to look here.",
   "font-size:13px;color:#aaa;"
 );
 
-console.log(
-  "%cThere is nothing useful here.",
-  "font-size:11px;color:#666;"
-);
 
+/* =========================
+   REFRESH JOKE
+========================= */
 
-/* =========================================
-   RANDOM GLITCH
-========================================= */
+window.addEventListener("beforeunload", function() {
 
-setInterval(() => {
+  console.log(
+    "%cWHY ARE YOU REFRESHING?",
+    "font-size:22px;font-weight:bold;color:#9d4cff;"
+  );
 
-  const title = document.querySelector(".intro h1");
-
-  if (!title || intro.classList.contains("hidden")) {
-    return;
-  }
-
-  title.style.transform =
-    `translate(${Math.random() * 4 - 2}px, ${Math.random() * 3 - 1}px)`;
-
-  setTimeout(() => {
-
-    title.style.transform = "";
-
-  }, 90);
-
-}, 7000);
+});
